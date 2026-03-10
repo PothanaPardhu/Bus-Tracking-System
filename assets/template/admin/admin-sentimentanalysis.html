@@ -1,0 +1,229 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link href="{% static 'admin/img/logo/logo.png' %}" rel="icon">
+  <title>School Bus Tracking - Blank Page</title>
+  <link href="{% static 'admin/vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
+  <link href="{% static 'admin/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css">
+  <link href="{% static 'admin/css/ruang-admin.min.css' %}" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+  
+</head>
+
+<body id="page-top">
+  <div id="wrapper">
+    <!-- Sidebar -->
+    <ul class="navbar-nav sidebar sidebar-light accordion" id="accordionSidebar">
+      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{% url 'admin_index' %}">
+        <div class="sidebar-brand-icon">
+          <img src="{% static 'admin/img/logo/logo2.png' %}">
+        </div>
+        <div class="sidebar-brand-text mx-3">School Bus Tracking</div>
+      </a>
+      <hr class="sidebar-divider my-0">
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'admin_index' %}">
+          <i class="fas fa-fw fa-tachometer-alt"></i>
+          <span>Admin-Dashboard</span></a>
+      </li>
+      <hr class="sidebar-divider">
+      <!-- <div class="sidebar-heading">
+        Features
+      </div> -->
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseBootstrap"
+          aria-expanded="true" aria-controls="collapseBootstrap">
+          <i class="far fa-fw fa-window-maximize"></i>
+          <span>Student Management Portal</span>
+        </a>
+        <div id="collapseBootstrap" class="collapse" aria-labelledby="headingBootstrap" data-parent="#accordionSidebar">
+          <div class="bg-white py-2 collapse-inner rounded">
+            <!-- <h6 class="collapse-header">Bootstrap UI</h6> -->
+            <a class="collapse-item" href="{% url 'admin_addnewstudent' %}">Add Student</a>
+            <a class="collapse-item" href="{% url 'admin_managestudent' %}">Manage Student</a>
+           
+          </div>
+        </div>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseBootstrap"
+          aria-expanded="true" aria-controls="collapseBootstrap">
+          <i class="far fa-fw fa-window-maximize"></i>
+          <span>Bus Delay Update</span>
+        </a>
+        <div id="collapseBootstrap" class="collapse" aria-labelledby="headingBootstrap" data-parent="#accordionSidebar">
+          <div class="bg-white py-2 collapse-inner rounded">
+            <!-- <h6 class="collapse-header">Bootstrap UI</h6> -->
+            <a class="collapse-item" href="{% url 'admin_busdelay' %}">Bus Delay Update</a>
+            <!-- <a class="collapse-item" href="admin-manage-student.html">Manage Student</a> -->
+           
+          </div>
+        </div>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseBootstrap"
+          aria-expanded="true" aria-controls="collapseBootstrap">
+          <i class="far fa-fw fa-window-maximize"></i>
+          <span>Feedback Analysis</span>
+        </a>
+        <div id="collapseBootstrap" class="collapse" aria-labelledby="headingBootstrap" data-parent="#accordionSidebar">
+          <div class="bg-white py-2 collapse-inner rounded">
+            <!-- <h6 class="collapse-header">Bootstrap UI</h6> -->
+            <a class="collapse-item" href="{% url 'admin_feedbackanalysis' %}">Feedback Analysis</a>
+            <a class="collapse-item" href="{% url 'admin_sentimentanalysis' %}">Sentiment Analysis</a> 
+           
+          </div>
+        </div>
+      </li>
+      </li>
+      <hr class="sidebar-divider">
+      <div class="version" id="version-School Bus Tracking"></div>
+    </ul>
+    <!-- Sidebar -->
+    <div id="content-wrapper" class="d-flex flex-column">
+      <div id="content">
+        <!-- TopBar -->
+        <nav class="navbar navbar-expand navbar-light bg-navbar topbar mb-4 static-top">
+          <button id="sidebarToggleTop" class="btn btn-link rounded-circle mr-3">
+            <i class="fa fa-bars"></i>
+          </button>
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item dropdown no-arrow">
+              <!-- <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-search fa-fw"></i>
+              </a> -->
+              <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
+                aria-labelledby="searchDropdown">
+                <form class="navbar-search">
+                  <div class="input-group">
+                    <input type="text" class="form-control bg-light border-1 small" placeholder="What do you want to look for?"
+                      aria-label="Search" aria-describedby="basic-addon2" style="border-color: #3f51b5;">
+                    <div class="input-group-append">
+                      <button class="btn btn-primary" type="button">
+                        <i class="fas fa-search fa-sm"></i>
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </li>
+            <li class="nav-item dropdown no-arrow mx-1">
+              
+             
+            </li>
+          
+           
+            <div class="topbar-divider d-none d-sm-block"></div>
+            <li class="nav-item dropdown no-arrow">
+              <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                <img class="img-profile rounded-circle" src="{% static 'admin/img/boy.png' %}" style="max-width: 60px">
+                <span class="ml-2 d-none d-lg-inline text-white small">Administrator</span>
+              </a>
+              <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                
+                
+                
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" type="submit"  href="{% url 'main_index' %}">
+                  <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                  Logout
+                </a>
+              </div>
+            </li>
+          </ul>
+        </nav>
+        <!-- Topbar -->
+
+        <!-- Container Fluid-->
+        <div class="container-fluid" id="container-wrapper">
+          <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h3 mb-0 text-gray-800">Sentiment Analysis</h1>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'admin_index' %}">Dashboard</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'admin_addnewstudent' %}">Add New Student</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'admin_managestudent' %}">Manage Student</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'admin_busdelay' %}">Bus Delay Update</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'admin_feedbackanalysis' %}">Feedback Analysis</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'admin_sentimentanalysis' %}">Sentiment Analysis</a></li>
+  
+            </ol>
+          </div>
+
+          <canvas id="myChart" style="width:100%;max-width:1000px"></canvas>
+
+<script>
+var xValues = ["Very Positive", "Positive", "Neutral", "Negative","Very Negative"];
+var yValues = [{{i}}, {{j}}, {{m}}, {{l}},{{k}}];
+var barColors = ["red", "green","blue","orange","brown"];
+
+new Chart("myChart", {
+  type: "bar",
+  data: {
+    labels: xValues,
+    datasets: [{
+      backgroundColor: barColors,
+      data: yValues
+    }]
+  },
+  options: {
+    legend: {display: false},
+    title: {
+      display: true,
+      text: "School Bus Rating"
+    }
+  }
+});
+</script>
+
+          
+
+         
+
+          <!-- Modal Logout -->
+         
+
+        </div>
+
+          <!-- Modal Logout -->
+          
+        <!---Container Fluid-->
+      </div>
+      <!-- Footer -->
+      <footer class="sticky-footer bg-white">
+        <div class="container my-auto">
+          <div class="copyright text-center my-auto">
+            <span>copyright &copy; <script> document.write(new Date().getFullYear()); </script> - developed by
+              <b><a href="https://manacinfotech.com" target="_blank">manacinfotech</a></b>
+
+            </span>
+          </div>
+        </div>
+      </footer>
+      <!-- Footer -->
+    </div>
+  </div>
+
+  <!-- Scroll to top -->
+  <a class="scroll-to-top rounded" href="{% static 'admin/#page-top' %}">
+    <i class="fas fa-angle-up"></i>
+  </a>
+
+  <script src="{% static 'admin/vendor/jquery/jquery.min.js' %}"></script>
+  <script src="{% static 'admin/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'admin/vendor/jquery-easing/jquery.easing.min.js' %}"></script>
+  <script src="{% static 'admin/js/ruang-admin.min.js' %}"></script>
+  <script src="{% static 'admin/vendor/chart.js/Chart.min.js' %}"></script>
+  <script src="{% static 'admin/js/demo/chart-area-demo.js' %}"></script>  
+
+</body>
+
+</html>

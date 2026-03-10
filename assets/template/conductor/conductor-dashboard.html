@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conductor Dashboard - School Bus Tracking Real-Time</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+            flex-direction: column;
+            padding: 20px;
+            gap: 15px;
+            background: #f5f5f5;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header-info-mini {
+            display: flex;
+            gap: 20px;
+            font-size: 13px;
+        }
+
+        .header-info-item {
+            display: flex;
+            flex-direction: column;
+            background: rgba(255,255,255,0.15);
+            padding: 8px 12px;
+            border-radius: 4px;
+        }
+
+        .header-label {
+            opacity: 0.8;
+            font-size: 11px;
+            text-transform: uppercase;
+        }
+
+        .header-value {
+            font-weight: 600;
+            font-size: 16px;
+            margin-top: 2px;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 8px;
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            overflow-x: auto;
+            flex-shrink: 0;
+        }
+
+        .nav-tab {
+            flex-shrink: 0;
+            padding: 12px 18px;
+            border: none;
+            background: #f5f5f5;
+            color: #333;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            border-radius: 6px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+
+        .nav-tab:hover {
+            background: #e8e8e8;
+        }
+
+        .nav-tab.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .content-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            overflow-y: auto;
+        }
+
+        .tab-content {
+            display: none;
+            height: 100%;
+        }
+
+        .tab-content.active {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card h2 {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 10px;
+        }
+
+        .card-content {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .map-container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+            position: relative;
+            flex: 1;
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+
+        .map-controls {
+            display: flex;
+            gap: 8px;
+            padding: 10px;
+            background: white;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 999;
+        }
+
+        .map-control-btn {
+            width: 40px;
+            height: 40px;
+            border: none;
+            border-radius: 4px;
+            background: #667eea;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .map-control-btn:hover {
+            background: #764ba2;
+            transform: scale(1.1);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .stat-box {
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .stat-number {
+            font-size: 28px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: #999;
+            margin-top: 4px;
+            text-transform: uppercase;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+            width: 100%;
+            padding: 15px;
+            font-size: 14px;
+        }
+
+        .btn-primary:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: #f44336;
+            color: white;
+        }
+
+        .counter-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+            flex: 1;
+        }
+
+        .counter-box.drop {
+            background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+            box-shadow: 0 4px 12px rgba(255, 152, 0, 0.3);
+        }
+
+        .counter-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            opacity: 0.9;
+            letter-spacing: 1px;
+        }
+
+        .counter-number {
+            font-size: 48px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .status-timeline {
+            list-style: none;
+            position: relative;
+            padding: 20px 0 20px 40px;
+        }
+
+        .status-timeline::before {
+            content: '';
+            position: absolute;
+            left: 10px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #ddd;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 18px;
+            padding-bottom: 18px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .timeline-item:last-child {
+            border-bottom: none;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -38px;
+            top: 0;
+            width: 20px;
+            height: 20px;
+            background: #667eea;
+            border: 3px solid white;
+            border-radius: 50%;
+            box-shadow: 0 0 0 2px #667eea;
+        }
+
+        .timeline-item.boarding::before {
+            background: #4caf50;
+            box-shadow: 0 0 0 2px #4caf50;
+        }
+
+        .timeline-item.dropping::before {
+            background: #ff9800;
+            box-shadow: 0 0 0 2px #ff9800;
+        }
+
+        .timeline-item-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .timeline-item-text {
+            flex: 1;
+        }
+
+        .timeline-item-name {
+            font-weight: 600;
+            color: #333;
+            font-size: 13px;
+        }
+
+        .timeline-item-time {
+            font-size: 12px;
+            color: #999;
+            margin-top: 2px;
+        }
+
+        .badge {
+            background: #f0f0f0;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .badge.boarding {
+            background: #c8e6c9;
+            color: #2e7d32;
+        }
+
+        .badge.dropping {
+            background: #ffe0b2;
+            color: #e65100;
+        }
+
+        .info-box {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            margin-bottom: 15px;
+        }
+
+        .info-box strong {
+            display: block;
+            margin-bottom: 8px;
+            color: #667eea;
+        }
+
+        .live-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #4caf50;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        @media (max-width: 1200px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .header-info-mini {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+                gap: 10px;
+            }
+
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .nav-tabs {
+                flex-wrap: nowrap;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>
+                <i class="fas fa-bus"></i>
+                Conductor Dashboard
+                <span class="live-badge"><i class="fas fa-circle" style="font-size: 8px;"></i> LIVE</span>
+            </h1>
+            <div class="header-info-mini">
+                <div class="header-info-item" style="flex-direction: column;min-width:140px;">
+                    <div class="header-label">Class</div>
+                    <select id="classSelector" style="padding:4px 8px;border-radius:4px;border:none;">
+                        <option value="">-- all --</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                    </select>
+                </div>
+                <div class="header-info-item" style="flex-direction: column;min-width:120px;">
+                    <div class="header-label">Select Bus</div>
+                    <select id="busSelector" style="padding:4px 8px;border-radius:4px;border:none;">
+                        <option value="">-- choose --</option>
+                    </select>
+                </div>
+                <div class="header-info-item">
+                    <div class="header-label">Bus</div>
+                    <div class="header-value" id="headerBusNumber">-</div>
+                </div>
+                <div class="header-info-item">
+                    <div class="header-label">Route</div>
+                    <div class="header-value" id="headerRoute">-</div>
+                </div>
+                <div class="header-info-item">
+                    <div class="header-label">Speed</div>
+                    <div class="header-value" id="headerSpeed">0 km/h</div>
+                </div>
+                <div class="header-info-item">
+                    <div class="header-label">Seats</div>
+                    <div class="header-value" id="headerSeats">45</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="showTab('tracking')">
+                <i class="fas fa-map-location-dot"></i> School Bus Tracking
+            </button>
+            <button class="nav-tab" onclick="showTab('home')">
+                <i class="fas fa-home"></i> Home (Current)
+            </button>
+            <button class="nav-tab" onclick="showTab('boarding-scan')">
+                <i class="fas fa-qrcode"></i> Home-School-Scan
+            </button>
+            <button class="nav-tab" onclick="showTab('boarding-status')">
+                <i class="fas fa-list-check"></i> Boarding-Status
+            </button>
+            <button class="nav-tab" onclick="showTab('drop-scan')">
+                <i class="fas fa-qrcode"></i> School-Home-Scan
+            </button>
+            <button class="nav-tab" onclick="showTab('drop-status')">
+                <i class="fas fa-list-check"></i> Drop-Status
+            </button>
+        </div>
+
+        <!-- Content Area -->
+        <div class="content-area">
+            <!-- TAB: School Bus Tracking -->
+            <div id="tracking" class="tab-content active">
+                <!-- Stats Grid -->
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="stat-number" id="boardedCount">0</div>
+                        <div class="stat-label">Children Boarded</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number" id="droppedCount">0</div>
+                        <div class="stat-label">Children Dropped</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number" id="totalCapacity">45</div>
+                        <div class="stat-label">Bus Capacity</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number" id="availableSeats">45</div>
+                        <div class="stat-label">Available Seats</div>
+                    </div>
+                </div>
+
+                <!-- Map -->
+                <div class="map-container">
+                    <div id="map"></div>
+                    <div class="map-controls">
+                        <button class="map-control-btn" onclick="zoomIn()" title="Zoom In">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                        <button class="map-control-btn" onclick="zoomOut()" title="Zoom Out">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <button class="map-control-btn" onclick="resetMapView()" title="Reset">
+                            <i class="fas fa-home"></i>
+                        </button>
+                        <button class="map-control-btn" onclick="centerOnBus()" title="Center on Bus">
+                            <i class="fas fa-bus"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: Home (Current Status) -->
+            <div id="home" class="tab-content">
+                <div class="card">
+                    <h2><i class="fas fa-info-circle"></i> Current Bus Status</h2>
+                    <div class="card-content">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
+                            <div class="counter-box">
+                                <div class="counter-label">👨‍👩‍👧 Boarded</div>
+                                <div class="counter-number" id="homeBoarded">0</div>
+                            </div>
+                            <div class="counter-box drop">
+                                <div class="counter-label">🏫 Dropped</div>
+                                <div class="counter-number" id="homeDropped">0</div>
+                            </div>
+                        </div>
+                        <div class="info-box" style="border-left-color: #667eea;">
+                            <strong>📍 Bus Information</strong>
+                            <div style="display: grid; gap: 10px; font-size: 13px;">
+                                <div style="display: flex; justify-content: space-between; padding: 8px; background: white; border-radius: 4px;">
+                                    <span style="font-weight: 600;">Bus Number:</span>
+                                    <span id="home-bus-number" style="color: #667eea; font-weight: 600;">-</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; padding: 8px; background: white; border-radius: 4px;">
+                                    <span style="font-weight: 600;">Route:</span>
+                                    <span id="home-bus-route">-</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; padding: 8px; background: white; border-radius: 4px;">
+                                    <span style="font-weight: 600;">Current Speed:</span>
+                                    <span id="home-bus-speed" style="color: #ff9800; font-weight: 600;">0 km/h</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; padding: 8px; background: white; border-radius: 4px;">
+                                    <span style="font-weight: 600;">Available Seats:</span>
+                                    <span id="home-seats" style="color: #4caf50; font-weight: 600;">45</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: Home-School-Scan (Boarding) -->
+            <div id="boarding-scan" class="tab-content">
+                <div class="card">
+                    <h2><i class="fas fa-qrcode"></i> Home to School - Board Children</h2>
+                    <div class="card-content">
+                        <button class="btn btn-primary" onclick="triggerBoardingCamera()">
+                            <i class="fas fa-camera"></i> Capture QR Code
+                        </button>
+                        <input type="file" id="boardingCameraInput" class="camera-input" accept="image/*" capture="environment" style="display: none;">
+                        <div id="boardingPreview" style="margin-top: 20px;"></div>
+                        <div class="info-box" style="border-left-color: #2196F3; margin-top: 20px;">
+                            <strong>📸 Instructions</strong>
+                            Point your camera at the child's QR code ID to board them. Photo will be processed automatically.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: Boarding Status -->
+            <div id="boarding-status" class="tab-content">
+                <div class="card">
+                    <h2><i class="fas fa-list-check"></i> Boarding Status - Children on Board</h2>
+                    <div class="card-content">
+                        <div style="background: linear-gradient(135deg, #4caf50 0%, #45a049 100%); color: white; padding: 25px; border-radius: 8px; text-align: center; margin-bottom: 20px;">
+                            <div style="font-size: 12px; opacity: 0.9; text-transform: uppercase;">Total Children Boarded</div>
+                            <div style="font-size: 48px; font-weight: bold; margin: 10px 0;" id="boardingTotal">0</div>
+                        </div>
+                        <ul class="status-timeline" id="boardingTimeline">
+                            <li class="timeline-item boarding">
+                                <div class="timeline-item-content">
+                                    <div class="timeline-item-text">
+                                        <div class="timeline-item-name">Waiting for boarding...</div>
+                                        <div class="timeline-item-time">Real-time updates active</div>
+                                    </div>
+                                    <div class="badge boarding">Active</div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: School-Home-Scan (Dropping) -->
+            <div id="drop-scan" class="tab-content">
+                <div class="card">
+                    <h2><i class="fas fa-qrcode"></i> School to Home - Drop Children</h2>
+                    <div class="card-content">
+                        <button class="btn btn-primary" onclick="triggerDroppingCamera()" style="background: #ff9800;">
+                            <i class="fas fa-camera"></i> Capture QR Code
+                        </button>
+                        <input type="file" id="droppingCameraInput" class="camera-input" accept="image/*" capture="environment" style="display: none;">
+                        <div id="droppingPreview" style="margin-top: 20px;"></div>
+                        <div class="info-box" style="border-left-color: #ff9800; margin-top: 20px;">
+                            <strong>📸 Instructions</strong>
+                            Point your camera at the child's QR code ID to drop them off. Photo will be processed automatically.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: Drop Status -->
+            <div id="drop-status" class="tab-content">
+                <div class="card">
+                    <h2><i class="fas fa-list-check"></i> Drop Status - Children Dropped Off</h2>
+                    <div class="card-content">
+                        <div style="background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%); color: white; padding: 25px; border-radius: 8px; text-align: center; margin-bottom: 20px;">
+                            <div style="font-size: 12px; opacity: 0.9; text-transform: uppercase;">Total Children Dropped</div>
+                            <div style="font-size: 48px; font-weight: bold; margin: 10px 0;" id="droppingTotal">0</div>
+                        </div>
+                        <ul class="status-timeline" id="droppingTimeline">
+                            <li class="timeline-item dropping">
+                                <div class="timeline-item-content">
+                                    <div class="timeline-item-text">
+                                        <div class="timeline-item-name">Waiting for drop-offs...</div>
+                                        <div class="timeline-item-time">Real-time updates active</div>
+                                    </div>
+                                    <div class="badge dropping">Active</div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // Global state
+        let map, busMarker, currentBusData = null;
+        let updateInterval = null;
+        let initialZoom = 10;
+        let initialLat = 20;
+        let initialLng = 78;
+        let boardingEvents = [];
+        let droppingEvents = [];
+        let ws = null; // WebSocket connection
+        let selectedBusId = null; // bus currently selected by conductor
+
+        // fetch available buses and populate selector
+        async function loadBusList() {
+            try {
+                let url = '/api/v1/tracking/buses/';
+                const cls = document.getElementById('classSelector').value;
+                if (cls) url += '?bus_class=' + encodeURIComponent(cls);
+                const resp = await fetch(url);
+                if (!resp.ok) throw new Error('failed to load buses');
+                const result = await resp.json();
+                let list = result;
+                if (result.results) list = result.results;
+                const sel = document.getElementById('busSelector');
+                sel.innerHTML = '<option value="">-- choose --</option>';
+                if (!list || list.length === 0) {
+                    // Try a fallback: load all buses (no class filter)
+                    try {
+                        const fbResp = await fetch('/api/v1/tracking/buses/');
+                        if (fbResp.ok) {
+                            const fbData = await fbResp.json();
+                            let fbList = fbData.results ? fbData.results : fbData;
+                            if (fbList && fbList.length > 0) {
+                                fbList.forEach(b => {
+                                    const opt = document.createElement('option');
+                                    opt.value = b.bus_id;
+                                    opt.textContent = b.bus_number + (b.bus_route ? ' ('+b.bus_route+')' : '') + ' (all)';
+                                    sel.appendChild(opt);
+                                });
+                                return;
+                            }
+                        }
+                    } catch (ex) {
+                        console.warn('fallback load all buses failed', ex);
+                    }
+
+                    const opt = document.createElement('option');
+                    opt.value = '';
+                    opt.textContent = 'No buses configured for this class';
+                    opt.disabled = true;
+                    sel.appendChild(opt);
+                    return;
+                }
+                list.forEach(b => {
+                    const opt = document.createElement('option');
+                    opt.value = b.bus_id;
+                    opt.textContent = b.bus_number + (b.bus_route ? ' ('+b.bus_route+')' : '');
+                    sel.appendChild(opt);
+                });
+                sel.addEventListener('change', async function() {
+                    const id = this.value;
+                    if (id) {
+                        // assign bus to conductor
+                        await assignBus(id);
+                        selectedBusId = id;
+                        loadBusStatus();
+                    }
+                });
+            } catch (e) {
+                console.error('bus list error', e);
+            }
+        }
+
+        async function assignBus(busId) {
+            try {
+                const res = await fetch('/api/v1/tracking/assign-bus/', {
+                    method: 'POST',
+                    headers: {'Content-Type':'application/json'},
+                    body: JSON.stringify({bus_id: busId})
+                });
+                if (!res.ok) throw new Error('assign failed');
+                const data = await res.json();
+                console.log('assigned bus', data);
+            } catch (e) {
+                console.error('assign bus error', e);
+            }
+        }
+
+        // Tab switching
+        function showTab(tabName) {
+            // Hide all tab contents
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+
+            // Remove active class from all buttons
+            const buttons = document.querySelectorAll('.nav-tab');
+            buttons.forEach(btn => btn.classList.remove('active'));
+
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+
+            // Add active class to clicked button
+            event.target.closest('.nav-tab').classList.add('active');
+
+            // Initialize map if tracking tab opened
+            if (tabName === 'tracking' && !map) {
+                setTimeout(initializeMap, 100);
+            }
+        }
+
+        // Initialize map
+        function initializeMap() {
+            if (map) return;
+            map = L.map('map').setView([initialLat, initialLng], initialZoom);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors',
+                maxZoom: 19,
+                minZoom: 3
+            }).addTo(map);
+        }
+
+        // Map controls
+        function zoomIn() {
+            if (map) map.zoomIn();
+        }
+
+        function zoomOut() {
+            if (map) map.zoomOut();
+        }
+
+        function resetMapView() {
+            if (map) map.setView([initialLat, initialLng], initialZoom);
+        }
+
+        function centerOnBus() {
+            if (currentBusData && currentBusData.latest_location && map) {
+                const lat = currentBusData.latest_location.latitude;
+                const lng = currentBusData.latest_location.longitude;
+                map.setView([lat, lng], 15);
+            }
+        }
+
+        // Load bus status
+        async function loadBusStatus() {
+            try {
+                let url = '/api/v1/tracking/bus/status/';
+                if (selectedBusId) url += '?bus_id=' + encodeURIComponent(selectedBusId);
+                const response = await fetch(url);
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                
+                const busesData = await response.json();
+                let data = null;
+
+                if (Array.isArray(busesData)) {
+                    data = busesData[0];
+                } else if (busesData.results && Array.isArray(busesData.results)) {
+                    data = busesData.results[0];
+                } else {
+                    data = busesData;
+                }
+
+                if (data) {
+                    currentBusData = data;
+                    updateUI(data);
+                    // if first time or selector empty, sync
+                    if (data.bus_id && (!selectedBusId || document.getElementById('busSelector').value !== String(data.bus_id))) {
+                        selectedBusId = data.bus_id;
+                        const sel = document.getElementById('busSelector');
+                        if (sel) sel.value = String(data.bus_id);
+                    }
+                }
+            } catch (error) {
+                console.error('Bus status error:', error);
+            }
+        }
+
+        // Update all UI elements
+        function updateUI(data) {
+            // Header
+            document.getElementById('headerBusNumber').textContent = data.bus_number || '-';
+            document.getElementById('headerRoute').textContent = data.bus_route || '-';
+            document.getElementById('headerSpeed').textContent = (data.latest_location?.speed || 0) + ' km/h';
+
+            // Tracking tab
+            document.getElementById('boardedCount').textContent = data.boarded_count || 0;
+            document.getElementById('droppedCount').textContent = data.dropped_count || 0;
+            const avail = 45 - (data.boarded_count || 0);
+            document.getElementById('availableSeats').textContent = avail;
+            document.getElementById('headerSeats').textContent = avail;
+
+            // Home tab
+            document.getElementById('homeBoarded').textContent = data.boarded_count || 0;
+            document.getElementById('homeDropped').textContent = data.dropped_count || 0;
+            document.getElementById('home-bus-number').textContent = data.bus_number || '-';
+            document.getElementById('home-bus-route').textContent = data.bus_route || '-';
+            document.getElementById('home-bus-speed').textContent = (data.latest_location?.speed || 0) + ' km/h';
+            document.getElementById('home-seats').textContent = avail;
+
+            // Update map
+            if (map && data.history && data.history.length) {
+                // animate along history points
+                animateBus(data.history);
+            } else if (data.latest_location && map) {
+                const lat = data.latest_location.latitude;
+                const lng = data.latest_location.longitude;
+
+                if (!busMarker) {
+                    busMarker = L.marker([lat, lng], {
+                        icon: L.icon({
+                            iconUrl: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23667eea"><path d="M12 2c-4.4 0-8 2.6-8 5.8v9.3c0 2.3 1.7 4.3 4 4.8v1.1h2v-1h4v1h2v-1.1c2.3-.5 4-2.5 4-4.8V7.8c0-3.2-3.6-5.8-8-5.8zm0 2c3.3 0 6 1.8 6 4v2H6V8c0-2.2 2.7-4 6-4z"/></svg>',
+                            iconSize: [40, 40]
+                        })
+                    }).addTo(map);
+                } else {
+                    busMarker.setLatLng([lat, lng]);
+                }
+
+                if (map.getZoom() < 10) {
+                    map.setView([lat, lng], 15);
+                }
+            }
+        }
+
+        // Camera functions
+        function triggerBoardingCamera() {
+            document.getElementById('boardingCameraInput').click();
+        }
+
+        function triggerDroppingCamera() {
+            document.getElementById('droppingCameraInput').click();
+        }
+
+        document.getElementById('boardingCameraInput')?.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                processQRImage(file, 'boarding');
+            }
+        });
+
+        document.getElementById('droppingCameraInput')?.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                processQRImage(file, 'dropping');
+            }
+        });
+
+        function processQRImage(file, type) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const previewArea = type === 'boarding' ? 'boardingPreview' : 'droppingPreview';
+                document.getElementById(previewArea).innerHTML = `
+                    <img src="${event.target.result}" style="max-width: 100%; max-height: 200px; border-radius: 6px;">
+                    <p style="margin-top: 10px; font-size: 13px; color: #666;">Processing QR code...</p>
+                `;
+                // Simulate processing
+                setTimeout(() => {
+                    addTimelineEvent(type);
+                }, 500);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function addTimelineEvent(type) {
+            const names = ['Arun Kumar', 'Priya Singh', 'Rohit Patel', 'Neha Sharma', 'Vikas Joshi'];
+            const randomName = names[Math.floor(Math.random() * names.length)];
+            const now = new Date().toLocaleTimeString();
+
+            if (type === 'boarding') {
+                boardingEvents.push({ name: randomName, time: now });
+                document.getElementById('boardingTotal').textContent = boardingEvents.length;
+                
+                const item = `
+                    <li class="timeline-item boarding">
+                        <div class="timeline-item-content">
+                            <div class="timeline-item-text">
+                                <div class="timeline-item-name">✓ ${randomName}</div>
+                                <div class="timeline-item-time">Boarded at ${now}</div>
+                            </div>
+                            <div class="badge boarding">Boarded</div>
+                        </div>
+                    </li>
+                `;
+                document.getElementById('boardingTimeline').insertAdjacentHTML('afterbegin', item);
+            } else {
+                droppingEvents.push({ name: randomName, time: now });
+                document.getElementById('droppingTotal').textContent = droppingEvents.length;
+
+                const item = `
+                    <li class="timeline-item dropping">
+                        <div class="timeline-item-content">
+                            <div class="timeline-item-text">
+                                <div class="timeline-item-name">✓ ${randomName}</div>
+                                <div class="timeline-item-time">Dropped at ${now}</div>
+                            </div>
+                            <div class="badge dropping">Dropped</div>
+                        </div>
+                    </li>
+                `;
+                document.getElementById('droppingTimeline').insertAdjacentHTML('afterbegin', item);
+            }
+        }
+
+        // Animation state
+        let animateInterval = null;
+        let animationFrameId = null;
+
+        // Interpolate (LERP) between two lat/lng positions
+        function lerpPosition(from, to, t) {
+            // t should be 0 to 1
+            return {
+                latitude: from.latitude + (to.latitude - from.latitude) * t,
+                longitude: from.longitude + (to.longitude - from.longitude) * t
+            };
+        }
+
+        function animateBus(history) {
+            if (!history || !history.length) return;
+            // clear previous animation
+            if (animateInterval) clearInterval(animateInterval);
+            if (animationFrameId) cancelAnimationFrame(animationFrameId);
+            animateInterval = null;
+            animationFrameId = null;
+
+            let historyIdx = 0;  // current segment (0 = between history[0] and history[1])
+            let segmentProgress = 0;  // 0 to 1 within current segment
+            const segmentDuration = 1000;  // 1 second per segment for smooth motion
+            let lastUpdateTime = Date.now();
+
+            // place marker at first point
+            const first = history[0];
+            if (!busMarker) {
+                busMarker = L.marker([first.latitude, first.longitude], {
+                    icon: L.icon({
+                        iconUrl: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23667eea"><path d="M12 2c-4.4 0-8 2.6-8 5.8v9.3c0 2.3 1.7 4.3 4 4.8v1.1h2v-1h4v1h2v-1.1c2.3-.5 4-2.5 4-4.8V7.8c0-3.2-3.6-5.8-8-5.8zm0 2c3.3 0 6 1.8 6 4v2H6V8c0-2.2 2.7-4 6-4z"/></svg>',
+                        iconSize: [40, 40]
+                    })
+                }).addTo(map);
+            } else {
+                busMarker.setLatLng([first.latitude, first.longitude]);
+            }
+
+            if (map.getZoom() < 10) map.setView([first.latitude, first.longitude], 15);
+
+            // Smooth animation loop
+            const animate = () => {
+                const now = Date.now();
+                const elapsed = now - lastUpdateTime;
+                lastUpdateTime = now;
+
+                segmentProgress += elapsed / segmentDuration;
+
+                // Move to next segment if current is done
+                while (segmentProgress >= 1 && historyIdx < history.length - 1) {
+                    historyIdx++;
+                    segmentProgress -= 1;
+                }
+
+                // Stop if reached end
+                if (historyIdx >= history.length - 1) {
+                    if (busMarker) busMarker.setLatLng([history[history.length - 1].latitude, history[history.length - 1].longitude]);
+                    return;
+                }
+
+                // Interpolate position
+                const from = history[historyIdx];
+                const to = history[historyIdx + 1];
+                const interpolated = lerpPosition(from, to, Math.min(segmentProgress, 1));
+                if (busMarker) busMarker.setLatLng([interpolated.latitude, interpolated.longitude]);
+
+                // Continue animation
+                animationFrameId = requestAnimationFrame(animate);
+            };
+
+            animationFrameId = requestAnimationFrame(animate);
+        }
+
+        // Initialize on load
+        window.addEventListener('load', function() {
+            loadBusList();
+            loadBusStatus();
+            updateInterval = setInterval(loadBusStatus, 3000); // Update every 3 seconds
+            document.getElementById('classSelector').addEventListener('change', function() {
+                selectedBusId = null;
+                document.getElementById('busSelector').value = '';
+                loadBusList();
+            });
+        });
+
+        window.addEventListener('beforeunload', function() {
+            if (updateInterval) clearInterval(updateInterval);
+            if (animateInterval) clearInterval(animateInterval);
+            if (animationFrameId) cancelAnimationFrame(animationFrameId);
+        });
+    </script>
+</body>
+</html>

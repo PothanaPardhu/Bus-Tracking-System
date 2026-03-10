@@ -1,0 +1,436 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+  <!-- Basic -->
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <!-- Mobile Metas -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <!-- Site Metas -->
+  <meta name="keywords" content="" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+
+  <title>School Bus Tracking</title>
+
+
+
+  <!-- bootstrap core css -->
+  <link rel="stylesheet" type="text/css" href="{% static 'main/css/bootstrap.css' %}" />
+  <!-- progress barstle -->
+  <link rel="stylesheet" href="{% static 'main/css/css-circular-prog-bar.css' %}">
+  <!-- fonts style -->
+  <link href="https://fonts.googleapis.com/css?family=Poppins:400,700&display=swap" rel="stylesheet">
+  <!-- font wesome stylesheet -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  <!-- Custom styles for this template -->
+  <link href="{% static 'main/css/style.css' %}" rel="stylesheet" />
+  <!-- responsive style -->
+  <link href="{% static 'main/css/responsive.css' %}" rel="stylesheet" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css">
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+ 
+  <style>
+    body{
+      margin: 0;
+      padding: 0;
+      font-family: sans-serif;
+         background-image: url("https://media.istockphoto.com/id/1166892600/photo/diverse-group-of-happy-children-getting-on-school-bus.jpg?s=612x612&w=0&k=20&c=_xwDqXmNiTUg5ZIT98e1dsG2RU6Mrn2hbR8gXoE4GXo=");
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: top;
+    }
+    .box{
+      width: 300px;
+      padding: 40px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%,-50%);
+      background: #191919;
+      text-align: center;
+          box-shadow: -1px 92px 99px -62px rgba(3, 107, 255, 0.27), 0 1px 6px 0 rgba(10, 48, 255, 0.48);
+        border-radius: 5px;
+    }
+    .box h1{
+      color: white;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+    .box input[type = "text"],.box input[type = "password"]{
+      border:0;
+      background: none;
+      display: block;
+      margin: 20px auto;
+      text-align: center;
+      border: 2px solid #3498db;
+      padding: 14px 10px;
+      width: 200px;
+      outline: none;
+      color: white;
+      border-radius: 24px;
+      transition: 0.25s;
+      
+    }
+    
+    .box a
+    {
+      border:0;
+      background: none;
+      display: block;
+      margin: 20px auto;
+      text-align: center;
+      border: 2px solid #3498db;
+      padding: 14px 10px;
+      width: 200px;
+      outline: none;
+      color: white;
+      border-radius: 24px;
+      transition: 0.25s;
+      width:10%;
+    }
+    .box input[type = "text"]:focus,.box input[type = "password"]:focus{
+      width: 280px;
+       -webkit-animation: 9s colorChange alternate;
+      transition height 0.3s, width 0.3s 0.1s
+      input:focus ~ .border
+      
+    }
+    .box input[type = "submit"]{
+      border:0;
+      background: none;
+      display: block;
+      margin: 20px auto;
+      text-align: center;
+      border: 2px solid #2ecc71;
+      padding: 14px 40px;
+      outline: none;
+      color: white;
+      border-radius: 24px;
+      transition: 0.25s;
+      cursor: pointer;
+    }
+    
+    .box a[type = "submit"]{
+      border:0;
+      background: none;
+      display: block;
+      margin: 20px auto;
+      text-align: center;
+      border: 2px solid #2ecc71;
+      padding: 14px 40px;
+      outline: none;
+      color: white;
+      border-radius: 24px;
+      transition: 0.25s;
+      cursor: pointer;
+    }
+    .box input[type = "submit"]:hover{
+      background: #2ecc71;
+    }
+    
+    .box a[type = "submit"]:hover{
+      background: #2ecc71;
+    }
+    
+    h1 {
+        display: block;
+        font-size: 2em;
+        margin-block-start: 0.67em;
+        margin-block-end: 0.67em;
+        margin-inline-start: 0px;
+        margin-inline-end: 0px;
+        font-weight: bold;
+    }
+    
+    
+    @-webkit-keyframes colorChange {
+      0%   { border-color: #007bff;  }
+      5%  { border-color: #6610f2; }
+      10%  { border-color: #6f42c1;}
+      15%  { border-color: #e83e8c; }
+      20% { border-color: #dc3545;}
+       25%   { border-color: #fd7e14;  }
+      30%  { border-color: #ffc107; }
+      35%  { border-color: #28a745;}
+      40%  { border-color: #20c997; }
+      45%  { border-color: #17a2b8;}
+      50%  { border-color: #6c757d;  }
+      55%  { border-color: #343a40; }
+      60%  { border-color: #007bff;}
+      65%  { border-color: #6c757d; }
+      70% { border-color: #28a745;}
+      75% { border-color: #17a2b8;}
+      80% { border-color: #ffc107;}
+      85% { border-color: #dc3545;}
+      90% { border-color: #343a40;}
+      95% { border-color: #28a745;}
+      100% { border-color: #20c997;}
+    }
+    
+    
+    
+    /**************line*************/
+    
+    .lines{position:absolute;top:0;left:0;right:0;height:100%;margin:auto;width:100vw;z-index:-1}.lines .line{position:absolute;width:1px;height:100%;top:0;left:50%;background:rgba(255,255,255,.06);overflow:hidden}.lines .line::after{content:"";display:block;position:absolute;height:15vh;width:100%;top:-50%;left:0;background:-webkit-gradient(linear,left top,left bottom,from(rgba(255,255,255,0)),color-stop(75%,#fff),to(#fff));background:linear-gradient(to bottom,rgba(255,255,255,0) 0%,#fff 75%,#fff 100%);-webkit-animation:run 7s 0s infinite;animation:run 7s 0s infinite;-webkit-animation-fill-mode:forwards;animation-fill-mode:forwards;-webkit-animation-timing-function:cubic-bezier(.4,.26,0,.97);animation-timing-function:cubic-bezier(.4,.26,0,.97)}.lines .line:nth-child(1){margin-left:-45%}.lines .line:nth-child(1)::after{-webkit-animation-delay:.5s;animation-delay:.5s}.lines .line:nth-child(3){margin-left:45%}.lines .line:nth-child(3)::after{-webkit-animation-delay:1s;animation-delay:1s}.lines .line:nth-child(4){margin-left:40%}.lines .line:nth-child(4)::after{-webkit-animation-delay:1.5s;animation-delay:1.5s}.lines .line:nth-child(5){margin-left:-40%}.lines .line:nth-child(5)::after{-webkit-animation-delay:2s;animation-delay:2s}.lines .line:nth-child(6){margin-left:35%}.lines .line:nth-child(6)::after{-webkit-animation-delay:2.5s;animation-delay:2.5s}.lines .line:nth-child(7){margin-left:-35%}.lines .line:nth-child(7)::after{-webkit-animation-delay:3s;animation-delay:3s}.lines .line:nth-child(8){margin-left:30%}.lines .line:nth-child(8)::after{-webkit-animation-delay:3.5s;animation-delay:3.5s}.lines .line:nth-child(9){margin-left:-30%}.lines .line:nth-child(9)::after{-webkit-animation-delay:4s;animation-delay:4s}.lines .line:nth-child(10){margin-left:25%}.lines .line:nth-child(10)::after{-webkit-animation-delay:4.5s;animation-delay:4.5s}.lines .line:nth-child(11){margin-left:-25%}.lines .line:nth-child(11)::after{-webkit-animation-delay:5s;animation-delay:5s}.lines .line:nth-child(12){margin-left:20%}.lines .line:nth-child(12)::after{-webkit-animation-delay:5.5s;animation-delay:5.5s}.lines .line:nth-child(13){margin-left:-20%}.lines .line:nth-child(13)::after{-webkit-animation-delay:6s;animation-delay:6s}.lines .line:nth-child(14){margin-left:15%}.lines .line:nth-child(14)::after{-webkit-animation-delay:6.5s;animation-delay:6.5s}.lines .line:nth-child(15){margin-left:-15%}.lines .line:nth-child(15)::after{-webkit-animation-delay:7s;animation-delay:7s}.lines .line:nth-child(16){margin-left:10%}.lines .line:nth-child(16)::after{-webkit-animation-delay:7.5s;animation-delay:7.5s}.lines .line:nth-child(17){margin-left:-10%}.lines .line:nth-child(17)::after{-webkit-animation-delay:8s;animation-delay:8s}.lines .line:nth-child(18){margin-left:5%}.lines .line:nth-child(18)::after{-webkit-animation-delay:8.5s;animation-delay:8.5s}.lines .line:nth-child(19){margin-left:-5%}.lines .line:nth-child(19)::after{-webkit-animation-delay:9s;animation-delay:9s}@-webkit-keyframes run{0%{top:-50%}100%{top:110%}}@keyframes run{0%{top:-50%}100%{top:110%}}.section-title-bg{color:#f0f0f0;font-size:85px;line-height:0;position:absolute;top:50%;left:0;z-index:-1;opacity:.8;font-family:Monoton,cursive;text-transform:uppercase;right:0;transform:translateY(-50%)}
+  </style>
+
+
+
+
+  <link rel="stylesheet" href="css/css-circular-prog-bar.css">
+
+
+</head>
+
+<body>
+  <div class="top_container sub_pages">
+    <!-- header section strats -->
+    <header class="header_section">
+      <div class="container">
+        <nav class="navbar navbar-expand-lg custom_nav-container ">
+          <a class="navbar-brand" href="{% url 'main_index' %}">
+            <img src="{% static 'main/images/logo.png' %}" alt="">
+            <span>
+              School Bus Tracking
+            </span>
+          </a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <div class="d-flex ml-auto flex-column flex-lg-row align-items-center">
+              <ul class="navbar-nav  ">
+                <li class="nav-item active">
+                  <a class="nav-link text-white" href="{% url 'main_index' %}"> Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link text-white" href="{% url 'main_about' %}"> About </a>
+                </li>
+
+                <li class="nav-item ">
+                  <a class="nav-link text-white" href="{% url 'main_admin_login' %}"> Admin </a>
+                </li>
+
+                <li class="nav-item active">
+                  <a class="nav-link text-white" href="{% url 'main_conductor_login' %}"> Conductor </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link text-white" href="{% url 'main_parent' %}"> Parent </a>
+                </li>
+
+                <li class="nav-item">
+                  <a class="nav-link text-white" href="{% url 'main_contact' %}">Contact</a>
+                </li>
+
+              </ul>
+              <!-- <form class="form-inline my-2 my-lg-0 ml-0 ml-lg-4 mb-3 mb-lg-0">
+                <button class="btn  my-2 my-sm-0 nav_search-btn" type="submit"></button>
+              </form> -->
+            </div>
+        </nav>
+      </div>
+    </header>
+
+  </div>
+
+
+<div>
+  <form class="box" action="" method="post">
+    {% csrf_token %}
+    <h1>Login</h1> 
+    <input type="text" name="name" placeholder="Username">
+    <input type="password" name="password" placeholder="Password">
+    <button type="submit" class="text-dark btn btn-success btn mb-40">Login</button>
+  
+  
+  
+  
+  <div class="lines">
+                  <div class="line"></div>
+                  <div class="line"></div>
+                  <div class="line"></div>
+                  <div class="line"></div>
+                  <div class="line"></div>
+                  <div class="line"></div>
+                  <div class="line"></div>
+                  <div class="line"></div>
+                  <div class="line"></div>
+                  <div class="line"></div>
+                  <div class="line"></div>
+                  <div class="line"></div>
+                  <div class="line"></div>
+                  <div class="line"></div>
+                  <div class="line"></div>
+                  <div class="line"></div>
+                  <div class="line"></div>
+                  <div class="line"></div>
+                  <div class="line"></div>
+              </div>
+            </div>
+        
+            </form>
+  <!-- end header section -->
+  <!-- <div class="wrapper">
+    <div class="logo">
+        <img src="https://img.freepik.com/free-vector/bus-cartoon-icon-illustration_138676-1957.jpg?w=740&t=st=1670313600~exp=1670314200~hmac=05ca8997885de21375d940794c2426ef544fdde52b74751936934fc2ad54b562" alt="">
+    </div>
+    <div class="text-center mt-4 name">
+        Conductor
+    </div>
+    <form class="p-3 mt-3">
+        <div class="form-field d-flex align-items-center">
+            <span class="far fa-user"></span>
+            <input type="text" name="userName" id="userName" placeholder="Username">
+        </div>
+        <div class="form-field d-flex align-items-center">
+            <span class="fas fa-key"></span>
+            <input type="password" name="password" id="pwd" placeholder="Password">
+        </div>
+        <button class="btn mt-3">Login</button>
+    </form>
+   
+</div> -->
+
+  <!-- about section -->
+ 
+
+
+  <!-- about section -->
+
+
+
+
+
+  <!-- footer section -->
+  <!-- <section class="container-fluid footer_section">
+    <p>
+      Copyright &copy; Codebook. All Rights Reserved By
+      <a href="https://manacinfotech.com">manacinfotech.com</a>
+    </p>
+  </section> -->
+  <script type="text/javascript">
+    function loginvalidation() {
+      var Email = document.myform.email
+      var Passw = /^(?=.[0-9])(?=.[!@#$%^&])[a-zA-Z0-9!@#$%^&]{5,16}$/;
+      var mailformat = /^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/;
+      var Password = document.myform.password
+      var Name = document.myform.fullname
+      var Contact = document.myform.contact
+      var AadharPhoto = document.myform.aadharphoto
+      var GSTPhoto = document.myform.gstphoto
+      // var StudentID = document.myform.studentID
+      // var Branch = document.myform.branch
+      // var Year = document.myform.year
+      // var Mobilenumber = document.myform.user_mobile
+      // var Typeuser = document.myform.user_birth
+      var Photo = document.myform.photo
+
+      
+
+      if (Name.value == "") {
+          alert("Please Enter Your Full Name:");
+        Name.focus();
+        return false;
+      }
+      if (Contact.value == "") {
+          alert("Please Enter Your Contact Number:");
+          Contact.focus();
+          return false;
+      }
+      // if (StudentID.value == "") {
+      // 	alert("Please Enter Your StudentID Number:");
+      // 	StudentID.focus();
+      // 	return false;
+      // }
+      // if (Branch.value == "") {
+      // 	alert("Please Enter Your Branch:");
+      // 	Branch.focus();
+      // 	return false;
+      // }
+      // if (Year.value == "") {
+      // 	alert("Please Choose your Year of Study:");
+      // 	Year.focus();
+      // 	return false;
+      // }
+      // if (Mobilenumber.value.length != 10) {
+
+      //     alert("please Enter valid mobile number");
+
+      //     return false;
+
+      // }
+
+      // if (Mobilenumber.value.length <= 0) {
+
+      //     alert("Please Enter Mobile Number");
+
+      //     return false;
+      // }
+       
+      if (Email.value == "") {
+        alert("Please Enter Your Email Address");
+        Email.focus();
+        return false;
+      }
+
+      if (!Email.value.match(mailformat)) {
+        alert("Invalid Email format");
+        Email.focus();
+        return false;
+      }
+      // if (Typeuser.value == ""){
+
+      //     alert("Please Select DOB: ");
+      //     Typeuser.focus();
+
+      //     return false;
+      // }
+      if (Password.value.length <= 0) {
+        alert("Please Enter Your Password")
+        Password.focus();
+        return false;
+      }
+      // if (!Password.value.match(passw)) {
+      //     alert("password should must be special Characters and Numbers")
+      //     Password.focus();
+      //     return false;
+      // }
+      if (Password.value.length < 6) {
+        alert("password should not be less then six Characters")
+        Password.focus();
+        return false;
+      }
+      
+      if (AadharPhoto.value == "") {
+        alert("Please Upload Aadhar Image:");
+        AadharPhoto.focus();
+        return false;
+      }   
+      if (GSTPhoto.value == "") {
+        alert("Please Upload GST Invoice Bill Image:");
+        GSTPhoto.focus();
+        return false;
+      }
+      if (Photo.value == "") {
+        alert("Please Upload Profile Image:");
+        Photo.focus();
+        return false;
+      }      
+    }
+  </script>
+  <!-- footer section -->
+
+  <script type="text/javascript" src="{% static 'main/js/jquery-3.4.1.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'main/js/bootstrap.js' %}"></script>
+  <!-- progreesbar script -->
+
+  <!-- </script> -->
+
+</body>
+
+</html>

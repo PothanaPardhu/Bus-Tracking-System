@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Map Test - Quick Verification</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #f5f5f5; padding: 20px; }
+        .container { max-width: 1000px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; }
+        h1 { color: #333; margin-bottom: 20px; }
+        .status { padding: 15px; background: #e8f5e9; color: #2e7d32; border-radius: 6px; margin-bottom: 20px; font-weight: bold; }
+        .error { background: #ffebee; color: #c62828; }
+        #map { width: 100%; height: 600px; border: 2px solid #667eea; border-radius: 8px; margin: 20px 0; }
+        button { padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 6px; cursor: pointer; margin-right: 10px; }
+        button:hover { background: #764ba2; }
+        .info { padding: 15px; background: #e3f2fd; color: #1565c0; border-radius: 6px; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🗺️ Leaflet Map Test</h1>
+        
+        <div class="status" id="status">
+            Initializing... Please wait
+        </div>
+
+        <div>
+            <button onclick="testZoom()">Zoom In</button>
+            <button onclick="resetMap()">Reset View</button>
+            <button onclick="testMarker()">Add Test Marker</button>
+            <button onclick="showConsole()">Show Browser Console (F12)</button>
+        </div>
+
+        <div id="map"></div>
+
+        <div class="info">
+            <h3>How to Debug:</h3>
+            <ol>
+                <li>Press <strong>F12</strong> to open Developer Tools</li>
+                <li>Go to <strong>Console</strong> tab</li>
+                <li>Look for messages starting with <strong>[TRACKER]</strong></li>
+                <li>If map doesn't show, check for errors in red</li>
+                <li>Check <strong>Network</strong> tab if tiles don't load</li>
+            </ol>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        let map = null;
+        let marker = null;
+
+        console.log('[TEST] Page loaded, initializing map...');
+
+        function updateStatus(message, isError = false) {
+            const el = document.getElementById('status');
+            el.textContent = message;
+            if (isError) el.classList.add('error');
+        }
+
+        function initMap() {
+            try {
+                console.log('[TEST] Creating Leaflet map instance...');
+                updateStatus('Creating map...');
+                
+                map = L.map('map').setView([20.5937, 78.9629], 12);
+                console.log('[TEST] Map instance created successfully');
+                
+                console.log('[TEST] Loading OpenStreetMap tiles...');
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19,
+                    attribution: '&copy; OpenStreetMap contributors'
+                }).addTo(map);
+                
+                console.log('[TEST] Tiles loaded, map is ready!');
+                updateStatus('✅ Map is working! Click buttons above to test features.');
+                
+                // Add initial marker
+                marker = L.marker([20.5937, 78.9629]).addTo(map).bindPopup('Test Location');
+                console.log('[TEST] Test marker added');
+                
+            } catch (e) {
+                console.error('[TEST] ERROR:', e);
+                updateStatus('❌ Error: ' + e.message, true);
+            }
+        }
+
+        function testZoom() {
+            if (map) {
+                map.zoomIn();
+                console.log('[TEST] Zoomed in');
+            }
+        }
+
+        function resetMap() {
+            if (map) {
+                map.setView([20.5937, 78.9629], 12);
+                console.log('[TEST] Map reset');
+            }
+        }
+
+        function testMarker() {
+            if (map) {
+                const lat = 20.5937 + (Math.random() - 0.5) * 0.1;
+                const lng = 78.9629 + (Math.random() - 0.5) * 0.1;
+                L.marker([lat, lng]).addTo(map).bindPopup('Random Marker');
+                console.log('[TEST] Marker added at', lat, lng);
+            }
+        }
+
+        function showConsole() {
+            alert('Press F12 to open Developer Tools Console');
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('[TEST] DOM loaded, calling initMap()');
+            initMap();
+        });
+
+        // Also try immediate initialization
+        console.log('[TEST] Script executing...');
+        if (document.readyState === 'loading') {
+            console.log('[TEST] Document still loading...');
+        } else {
+            console.log('[TEST] Document already loaded, calling initMap() directly');
+            initMap();
+        }
+    </script>
+</body>
+</html>

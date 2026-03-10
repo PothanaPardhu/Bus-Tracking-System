@@ -1,0 +1,432 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+  <!-- Basic -->
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <!-- Mobile Metas -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <!-- Site Metas -->
+  <meta name="keywords" content="" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+
+  <title>School Bus Tracking</title>
+
+
+
+  <!-- bootstrap core css -->
+  <link rel="stylesheet" type="text/css" href="{% static 'main/css/bootstrap.css' %}" />
+  <!-- progress barstle -->
+  <link rel="stylesheet" href="{% static 'main/css/css-circular-prog-bar.css' %}">
+  <!-- fonts style -->
+  <link href="https://fonts.googleapis.com/css?family=Poppins:400,700&display=swap" rel="stylesheet">
+  <!-- font wesome stylesheet -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  <!-- Custom styles for this template -->
+  <link href="{% static 'main/css/style.css' %}" rel="stylesheet" />
+  <!-- responsive style -->
+  <link href="{% static 'main/css/responsive.css' %}" rel="stylesheet" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css">
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <style>
+    img{
+      width: 100%;
+    }
+    .login {
+        height: 1000px;
+        width: 100%;
+        background: radial-gradient(#ded5e6, #efe6f6);
+        position: relative;
+    }
+    .login_box {
+        width: 1050px;
+        height: 600px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%);
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 1px 4px 22px -8px #0004;
+        display: flex;
+        overflow: hidden;
+    }
+    .login_box .left{
+      width: 41%;
+      height: 100%;
+      padding: 25px 25px;
+      
+    }
+    .login_box .right{
+      width: 59%;
+      height: 100%  
+    }
+    .left .top_link a {
+        color: #452A5A;
+        font-weight: 400;
+    }
+    .left .top_link{
+      height: 20px
+    }
+    .left .contact{
+      display: flex;
+        align-items: center;
+        justify-content: center;
+        align-self: center;
+        height: 100%;
+        width: 73%;
+        margin: auto;
+    }
+    .left h3{
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .left input {
+        border: none;
+        width: 80%;
+        margin: 15px 0px;
+        border-bottom: 1px solid #4f30677d;
+        padding: 7px 9px;
+        width: 100%;
+        overflow: hidden;
+        background: transparent;
+        font-weight: 600;
+        font-size: 14px;
+    }
+    .left{
+      background: linear-gradient(-45deg, #dcd7e0, #fff);
+    }
+    .submit {
+        border: none;
+        padding: 15px 70px;
+        border-radius: 8px;
+        display: block;
+        margin: auto;
+        margin-top: 120px;
+        background: #e3d8eb;
+        color: #fff;
+        font-weight: bold;
+        -webkit-box-shadow: 0px 9px 15px -11px rgb(183, 187, 65);
+        -moz-box-shadow: 0px 9px 15px -11px rgba(88,54,114,1);
+        box-shadow: 0px 9px 15px -11px rgba(88,54,114,1);
+    }
+    
+    
+    
+    .right {
+      background: linear-gradient(212.38deg, rgba(68, 22, 137, 0.7) 0%, rgba(175, 70, 189, 0.71) 100%),url(https://static.seattletimes.com/wp-content/uploads/2019/01/web-typing-ergonomics-1020x680.jpg);
+      color: #fff;
+      position: relative;
+    }
+    
+    .right .right-text{
+      height: 100%;
+      position: relative;
+      transform: translate(0%, 45%);
+    }
+    .right-text h2{
+      display: block;
+      width: 100%;
+      text-align: center;
+      font-size: 50px;
+      font-weight: 500;
+    }
+    .right-text h5{
+      display: block;
+      width: 100%;
+      text-align: center;
+      font-size: 19px;
+      font-weight: 400;
+    }
+    
+    .right .right-inductor{
+      position: absolute;
+      width: 70px;
+      height: 7px;
+      background: #fff0;
+      left: 50%;
+      bottom: 70px;
+      transform: translate(-50%, 0%);
+    }
+    .top_link img {
+        width: 28px;
+        padding-right: 7px;
+        margin-top: -3px;
+    }
+    
+  </style>
+ 
+
+
+
+
+  <link rel="stylesheet" href="{% static 'main/css/css-circular-prog-bar.css' %}">
+
+
+</head>
+
+<body>
+  <div class="top_container sub_pages">
+    <!-- header section strats -->
+    <header class="header_section">
+      <div class="container">
+        <nav class="navbar navbar-expand-lg custom_nav-container ">
+          <a class="navbar-brand" href="{% url 'main_index' %}">
+            <img src="{% static 'main/images/logo.png' %}" alt="">
+            <span>
+              School Bus Tracking
+            </span>
+          </a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <div class="d-flex ml-auto flex-column flex-lg-row align-items-center">
+              <ul class="navbar-nav  ">
+                <li class="nav-item ">
+                  <a class="nav-link" href="{% url 'main_index' %}"> Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="{% url 'main_about' %}"> About </a>
+                </li>
+
+                <li class="nav-item active">
+                  <a class="nav-link" href="{% url 'main_admin_login' %}"> Admin </a>
+                </li>
+
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'main_conductor_login' %}"> Conductor </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'main_parent' %}"> Parent </a>
+                </li>
+
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'main_contact' %}">Contact</a>
+                </li>
+
+              </ul>
+              <!-- <form class="form-inline my-2 my-lg-0 ml-0 ml-lg-4 mb-3 mb-lg-0">
+                <button class="btn  my-2 my-sm-0 nav_search-btn" type="submit"></button>
+              </form> -->
+            </div>
+        </nav>
+      </div>
+    </header>
+
+  </div>
+  <!-- end header section -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+<body>
+	<section class="login">
+		<div class="login_box">
+			<div class="left">
+				<div class="top_link"><a href="#"><img src="https://drive.google.com/u/0/uc?id=16U__U5dJdaTfNGobB_OpwAJ73vM50rPV&export=download" alt=""></a></div>
+				<div class="contact">
+					<form action=""  method="POST" onsubmit='return loginvalidation();'>
+            {% csrf_token %}
+						<h3>Admin Login</h3>
+						<input name="username" type="text" placeholder="USERNAME">
+						<input  name="userpassword" type="password" placeholder="PASSWORD">
+						 <!-- <button type="submit"   class="submit text-dark"></button> -->
+             <button type="submit" class="text-dark btn btn-primary  btn mb-40">
+              Login </button>
+					</form>
+				</div>
+			</div>
+			<div class="right">
+				<div class="right-text">
+					<h2>Admin</h2>
+					<!-- <h5>A UX BASED CREATIVE AGENCEY</h5> -->
+				</div>
+				<div class="right-inductor"><img src="https://lh3.googleusercontent.com/fife/ABSRlIoGiXn2r0SBm7bjFHea6iCUOyY0N2SrvhNUT-orJfyGNRSMO2vfqar3R-xs5Z4xbeqYwrEMq2FXKGXm-l_H6QAlwCBk9uceKBfG-FjacfftM0WM_aoUC_oxRSXXYspQE3tCMHGvMBlb2K1NAdU6qWv3VAQAPdCo8VwTgdnyWv08CmeZ8hX_6Ty8FzetXYKnfXb0CTEFQOVF4p3R58LksVUd73FU6564OsrJt918LPEwqIPAPQ4dMgiH73sgLXnDndUDCdLSDHMSirr4uUaqbiWQq-X1SNdkh-3jzjhW4keeNt1TgQHSrzW3maYO3ryueQzYoMEhts8MP8HH5gs2NkCar9cr_guunglU7Zqaede4cLFhsCZWBLVHY4cKHgk8SzfH_0Rn3St2AQen9MaiT38L5QXsaq6zFMuGiT8M2Md50eS0JdRTdlWLJApbgAUqI3zltUXce-MaCrDtp_UiI6x3IR4fEZiCo0XDyoAesFjXZg9cIuSsLTiKkSAGzzledJU3crgSHjAIycQN2PH2_dBIa3ibAJLphqq6zLh0qiQn_dHh83ru2y7MgxRU85ithgjdIk3PgplREbW9_PLv5j9juYc1WXFNW9ML80UlTaC9D2rP3i80zESJJY56faKsA5GVCIFiUtc3EewSM_C0bkJSMiobIWiXFz7pMcadgZlweUdjBcjvaepHBe8wou0ZtDM9TKom0hs_nx_AKy0dnXGNWI1qftTjAg=w1920-h979-ft" alt=""></div>
+			</div>
+		</div>
+	</section>
+</body>
+</html>
+ 
+   
+   
+</div>
+
+  <!-- about section -->
+  <!-- {% if messages %}
+        {% for message in messages %}
+        {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+        <script>swal({
+                title: "Admin Login Successfully!",
+                text: "{{message}}",
+                icon: "success",
+                button: "OK",
+            });
+        </script>
+
+        {% elif message.level == DEFAULT_MESSAGE_LEVELS.WARNING %}
+        <script>swal({
+                title: "Warning :)",
+                text: "{{message}}",
+                icon: "warning",
+                button: "OK",
+            });
+        </script>
+        {% elif message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
+        <script>swal({
+                title: "error :)",
+                text: "{{message}}",
+                icon: "error",
+                button: "OK",
+            });
+        </script>
+        {% elif message.level == DEFAULT_MESSAGE_LEVELS.DANGER %}
+        <script>swal({
+                title: "error :)",
+                text: "{{message}}",
+                icon: "error",
+                button: "OK",
+            });
+        </script>
+        {% endif %}
+        {% endfor %}
+        {% endif %} -->
+        <script type="text/javascript">
+          function loginvalidation() {
+            var Email = document.myform.email
+            var Passw = /^(?=.[0-9])(?=.[!@#$%^&])[a-zA-Z0-9!@#$%^&]{5,16}$/;
+            var mailformat = /^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/;
+            var Password = document.myform.password
+            var Name = document.myform.fullname
+            var Contact = document.myform.contact
+            var AadharPhoto = document.myform.aadharphoto
+            var GSTPhoto = document.myform.gstphoto
+            // var StudentID = document.myform.studentID
+            // var Branch = document.myform.branch
+            // var Year = document.myform.year
+            // var Mobilenumber = document.myform.user_mobile
+            // var Typeuser = document.myform.user_birth
+            var Photo = document.myform.photo
+      
+            
+      
+            if (Name.value == "") {
+                alert("Please Enter Your Full Name:");
+              Name.focus();
+              return false;
+            }
+            if (Contact.value == "") {
+                alert("Please Enter Your Contact Number:");
+                Contact.focus();
+                return false;
+            }
+            // if (StudentID.value == "") {
+            // 	alert("Please Enter Your StudentID Number:");
+            // 	StudentID.focus();
+            // 	return false;
+            // }
+            // if (Branch.value == "") {
+            // 	alert("Please Enter Your Branch:");
+            // 	Branch.focus();
+            // 	return false;
+            // }
+            // if (Year.value == "") {
+            // 	alert("Please Choose your Year of Study:");
+            // 	Year.focus();
+            // 	return false;
+            // }
+            // if (Mobilenumber.value.length != 10) {
+      
+            //     alert("please Enter valid mobile number");
+      
+            //     return false;
+      
+            // }
+      
+            // if (Mobilenumber.value.length <= 0) {
+      
+            //     alert("Please Enter Mobile Number");
+      
+            //     return false;
+            // }
+             
+            if (Email.value == "") {
+              alert("Please Enter Your Email Address");
+              Email.focus();
+              return false;
+            }
+      
+            if (!Email.value.match(mailformat)) {
+              alert("Invalid Email format");
+              Email.focus();
+              return false;
+            }
+            // if (Typeuser.value == ""){
+      
+            //     alert("Please Select DOB: ");
+            //     Typeuser.focus();
+      
+            //     return false;
+            // }
+            if (Password.value.length <= 0) {
+              alert("Please Enter Your Password")
+              Password.focus();
+              return false;
+            }
+            // if (!Password.value.match(passw)) {
+            //     alert("password should must be special Characters and Numbers")
+            //     Password.focus();
+            //     return false;
+            // }
+            if (Password.value.length < 6) {
+              alert("password should not be less then six Characters")
+              Password.focus();
+              return false;
+            }
+            
+            if (AadharPhoto.value == "") {
+              alert("Please Upload Aadhar Image:");
+              AadharPhoto.focus();
+              return false;
+            }   
+            if (GSTPhoto.value == "") {
+              alert("Please Upload GST Invoice Bill Image:");
+              GSTPhoto.focus();
+              return false;
+            }
+            if (Photo.value == "") {
+              alert("Please Upload Profile Image:");
+              Photo.focus();
+              return false;
+            }      
+          }
+        </script>
+
+
+  <!-- about section -->
+
+
+
+
+
+  <!-- footer section -->
+  <section class="container-fluid footer_section">
+    <p>
+      Copyright &copy; Codebook. All Rights Reserved By
+      <a href="https://manacinfotech.com/">Codebook</a>
+    </p>
+  </section>
+  <!-- footer section -->
+
+  <script type="text/javascript" src="{% static 'main/js/jquery-3.4.1.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'main/js/bootstrap.js' %}"></script>
+  <!-- progreesbar script -->
+
+  </script>
+
+</body>
+
+</html>

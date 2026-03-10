@@ -1,0 +1,628 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link href="{% static 'admin/img/logo/logo.png' %}" rel="icon">
+  <title>School Bus Tracking - Blank Page</title>
+  <link href="{% static 'admin/vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
+  <link href="{% static 'admin/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css">
+  <link href="{% static 'admin/css/ruang-admin.min.css' %}" rel="stylesheet">
+  <!-- <link rel="stylesheet" href=
+  "https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" /> -->
+  <!-- <script src=
+  "https://code.jquery.com/jquery-3.5.1.js">
+</script> -->
+  <style>
+    input,
+button.btnn {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -300%);
+  display: block;
+  width: 6vw;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.5s cubic-bezier(0.4, 0.25, 0.8, 0.3);
+}
+
+input {
+  padding: 0.25rem 0;
+  border: 0;
+  border-bottom: 1px solid #bb1515;
+  outline: 0;
+  background: transparent;
+  color: rgb(130, 26, 26);
+  font-size: 3rem;
+  line-height: 4rem;
+  letter-spacing: 0.125rem;
+  transition: all 0.5s cubic-bezier(0.4, 0.25, 0.8, 0.3);
+}
+
+input::-moz-selection {
+  background: rgba(187, 21, 21, 0.25);
+}
+
+input::selection {
+  background: rgba(187, 21, 21, 0.25);
+}
+
+button.btnn,
+.signup-button {
+  padding: 0.25em 0;
+  border: 0;
+  outline: 0;
+  background: #bb1515;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 2rem;
+  line-height: 3.6rem;
+  letter-spacing: 0.0625rem;
+  box-shadow: 0 3px 5px 1px rgba(0, 0, 0, 0.25);
+  text-shadow: 0 -2px 0 rgba(253, 235, 235, 0.25), 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+input:focus,
+button.btnn:focus {
+  opacity: 1;
+  transform: translate(-50%, -100%);
+  pointer-events: auto;
+  transition: all 0.4s cubic-bezier(0.1, 0.45, 0.1, 0.85) 0.5s;
+  z-index: 10;
+}
+
+input:focus ~ input,
+input:focus ~ button.btnn {
+  transform: translate(-50%, 500%);
+  transition: all 0.5s ease-in;
+}
+
+input:focus ~ label .label-text {
+  transform: translate(-50%, 300%);
+  transition: all 0.5s ease-in;
+}
+
+input:focus ~ .tip {
+  opacity: 1;
+}
+
+input:focus ~ .signup-button,
+button.btnn:focus ~ .signup-button {
+  opacity: 0;
+}
+
+input:focus + label .label-text {
+  opacity: 1;
+  transform: translate(-50%, -100%);
+  transition: all 0.3s cubic-bezier(0.1, 0.45, 0.1, 0.85) 0.4s;
+}
+
+input:focus + label .nav-dot:before {
+  background: #a41212;
+  box-shadow: 0 0 0 0.15rem #111, 0 0 0.05rem 0.26rem #bb1515;
+}
+
+.tip {
+  position: fixed;
+  top: 57%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 70%;
+  opacity: 0;
+  color: #fff;
+  font-size: 0.875rem;
+  font-weight: 300;
+  letter-spacing: 0.125rem;
+  text-transform: uppercase;
+  text-align: right;
+  transition: opacity 0.25s 0.5s;
+}
+
+.signup-button,
+.signup-button-trigger {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -100%);
+  width: 70vw;
+  padding: 0.25rem 0;
+  line-height: 3.6rem;
+  text-align: center;
+  pointer-events: none;
+  cursor: pointer;
+  transition: opacity 0.4s 0.3s;
+}
+
+.signup-button-trigger {
+  opacity: 0;
+  pointer-events: auto;
+}
+
+.label-text {
+  position: fixed;
+  top: calc(50% - 4rem);
+  left: 50%;
+  transform: translate(-50%, -300%);
+  width: 60vw;
+  padding: 3.125rem 0 1.5rem;
+  text-transform: uppercase;
+  color: #fff;
+  opacity: 0;
+  font-size: 1.125rem;
+  font-weight: 300;
+  letter-spacing: 0.125rem;
+  pointer-events: none;
+  transition: all 0.4s cubic-bezier(0.4, 0.25, 0.8, 0.3) 0.05s;
+}
+
+.nav-dot {
+  cursor: pointer;
+  position: fixed;
+  padding: 0.625rem 1.25rem 0.625rem 0.625rem 0.625rem 0.625rem 0.625rem;
+  top: 52%;
+  right: 1.25rem;
+}
+.nav-dot:before {
+  content: "";
+  display: inline-block;
+  border-radius: 50%;
+  width: 1.375rem;
+  height: 1.375rem;
+  margin-right: 0.625rem;
+  position: fixed;
+  background-color: #16272f;
+  border: 0;
+  transition: all 0.25s;
+}
+.nav-dot:hover:before {
+  width: 1.625rem;
+  height: 1.625rem;
+  margin-top: -0.125rem;
+  margin-left: -0.125rem;
+  background-color: #a41212;
+}
+
+label[for=input-1] .nav-dot {
+  margin-top: -200px;
+}
+
+label[for=input-2] .nav-dot {
+  margin-top: -175px;
+}
+
+label[for=input-3] .nav-dot {
+  margin-top: -150px;
+}
+
+label[for=input-4] .nav-dot {
+  margin-top: -125px;
+}
+
+label[for=input-5] .nav-dot {
+  margin-top: -100px;
+}
+
+label[for=input-6] .nav-dot {
+  margin-top: -75px;
+}
+
+label[for=input-7] .nav-dot {
+  margin-top: -50px;
+}
+
+label[for=input-8] .nav-dot {
+  margin-top: -25px;
+}
+
+
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.myfo, .my {
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(to bottom right, #111E25 0%, #111 100%);
+  font-family: "Lato", sans-serif;
+}
+
+form {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}/*# sourceMappingURL=feed.css.map */
+</style>
+
+
+</head>
+
+<body id="page-top">
+  <div id="wrapper">
+    <!-- Sidebar -->
+    <ul class="navbar-nav sidebar sidebar-light accordion" id="accordionSidebar">
+      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{% url 'admin_index' %}">
+        <div class="sidebar-brand-icon">
+          <img src="{% static 'admin/img/logo/logo2.png' %}">
+        </div>
+        <div class="sidebar-brand-text mx-3">School Bus Tracking</div>
+      </a>
+      <hr class="sidebar-divider my-0">
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'admin_index' %}">
+          <i class="fas fa-fw fa-tachometer-alt"></i>
+          <span>Admin-Dashboard</span></a>
+      </li>
+      <hr class="sidebar-divider">
+      <!-- <div class="sidebar-heading">
+        Features
+      </div> -->
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseBootstrap"
+          aria-expanded="true" aria-controls="collapseBootstrap">
+          <i class="far fa-fw fa-window-maximize"></i>
+          <span>Student Management Portal</span>
+        </a>
+        <div id="collapseBootstrap" class="collapse" aria-labelledby="headingBootstrap" data-parent="#accordionSidebar">
+          <div class="bg-white py-2 collapse-inner rounded">
+            <!-- <h6 class="collapse-header">Bootstrap UI</h6> -->
+            <a class="collapse-item" href="{% url 'admin_addnewstudent' %}">Add Student</a>
+            <a class="collapse-item" href="{% url 'admin_managestudent' %}">Manage Student</a>
+           
+          </div>
+        </div>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseBootstrap"
+          aria-expanded="true" aria-controls="collapseBootstrap">
+          <i class="far fa-fw fa-window-maximize"></i>
+          <span>Bus Delay Update</span>
+        </a>
+        <div id="collapseBootstrap" class="collapse" aria-labelledby="headingBootstrap" data-parent="#accordionSidebar">
+          <div class="bg-white py-2 collapse-inner rounded">
+            <!-- <h6 class="collapse-header">Bootstrap UI</h6> -->
+            <a class="collapse-item" href="{% url 'admin_busdelay' %}">Bus Delay Update</a>
+            <!-- <a class="collapse-item" href="admin-manage-student.html">Manage Student</a> -->
+           
+          </div>
+        </div>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseBootstrap"
+          aria-expanded="true" aria-controls="collapseBootstrap">
+          <i class="far fa-fw fa-window-maximize"></i>
+          <span>Feedback Analysis</span>
+        </a>
+        <div id="collapseBootstrap" class="collapse" aria-labelledby="headingBootstrap" data-parent="#accordionSidebar">
+          <div class="bg-white py-2 collapse-inner rounded">
+            <!-- <h6 class="collapse-header">Bootstrap UI</h6> -->
+            <a class="collapse-item" href="{% url 'admin_feedbackanalysis' %}">Feedback Analysis</a>
+            <a class="collapse-item" href="{% url 'admin_sentimentanalysis' %}">Sentiment Analysis</a> 
+           
+          </div>
+        </div>
+      </li>
+      </li>
+      <hr class="sidebar-divider">
+      <div class="version" id="version-School Bus Tracking"></div>
+    </ul>
+    <!-- Sidebar -->
+    <div id="content-wrapper" class="d-flex flex-column">
+      <div id="content">
+        <!-- TopBar -->
+        <nav class="navbar navbar-expand navbar-light bg-navbar topbar mb-4 static-top">
+          <button id="sidebarToggleTop" class="btn btn-link rounded-circle mr-3">
+            <i class="fa fa-bars"></i>
+          </button>
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item dropdown no-arrow">
+             
+              <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
+                aria-labelledby="searchDropdown">
+                <form class="navbar-search">
+                  <div class="input-group">
+                    <input type="text" class="form-control bg-light border-1 small" placeholder="What do you want to look for?"
+                      aria-label="Search" aria-describedby="basic-addon2" style="border-color: #3f51b5;">
+                    <div class="input-group-append">
+                      <button class="btn btn-primary" type="button">
+                        <i class="fas fa-search fa-sm"></i>
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </li>
+            
+           
+            <div class="topbar-divider d-none d-sm-block"></div>
+            <li class="nav-item dropdown no-arrow">
+              <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                <img class="img-profile rounded-circle" src="{% static 'admin/img/boy.png' %}" style="max-width: 60px">
+                <span class="ml-2 d-none d-lg-inline text-white small">Administrator</span>
+              </a>
+              <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" type="submit"   href="{% url 'main_index' %}">
+                  <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                  Logout
+                </a>
+              </div>
+            </li>
+          </ul>
+        </nav>
+        <!-- Topbar -->
+        <div class="container-fluid" id="container-wrapper">
+          <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h3 mb-0 text-gray-800">Add Students</h1>
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="{% url 'admin_index' %}">Dashboard</a></li>
+              <li class="breadcrumb-item"><a href="{% url 'admin_addnewstudent' %}">Add New Student</a></li>
+              <li class="breadcrumb-item"><a href="{% url 'admin_managestudent' %}">Manage Student</a></li>
+              <li class="breadcrumb-item"><a href="{% url 'admin_busdelay' %}">Bus Delay Update</a></li>
+              <li class="breadcrumb-item"><a href="{% url 'admin_feedbackanalysis' %}">Feedback Analysis</a></li>
+              <li class="breadcrumb-item"><a href="{% url 'admin_sentimentanalysis' %}">Sentiment Analysis</a></li>
+
+            </ol>
+          </div>
+
+         
+
+          <!-- Modal Logout -->
+         
+
+        </div>
+
+       
+     
+      <section
+        class="home-section home-full-height"
+        
+      >
+
+        <form action="" method='POST' name='myform'  style="
+        background-image: linear-gradient(
+          to bottom right,
+          #111e25 0%,
+          #111 100%
+        );
+      "  onsubmit='return validate();' enctype="multipart/form-data" method="post">
+      {% csrf_token %} 
+       
+
+      <input
+      id="input-1"
+      type="text"
+      placeholder="Enter Child ID Number"
+      name="childid"
+   style="width: 900px;"
+
+      autofocus
+    />
+    <label for="input-1">
+      <span class="label-text">Child Id</span>
+      <span class="nav-dot"></span>
+      <div class="signup-button-trigger" style="width: 200px">
+        Register
+      </div>
+    </label>
+          
+          <input
+            id="input-1"
+            type="text"
+            placeholder="Enter Child Full Name"
+            name="name"
+         style="width: 900px;"
+ 
+            autofocus
+          />
+          <label for="input-1">
+            <span class="label-text">Child Name</span>
+            <span class="nav-dot"></span>
+            <div class="signup-button-trigger" style="width: 200px">
+              Register
+            </div>
+          </label>
+
+
+
+          <input
+          id="input-1"
+          type="text"
+          placeholder="Enter Child class Name"
+          name="class"
+       style="width: 900px;"
+
+          autofocus
+        />
+        <label for="input-1">
+          <span class="label-text">Class</span>
+          <span class="nav-dot"></span>
+          <div class="signup-button-trigger" style="width: 200px">
+            Register
+          </div>
+
+        </label>
+
+
+
+          <input
+            id="input-2"
+            type="text"
+            placeholder="Enter Child mother name"
+            name="mothername"
+         style="width: 900px;"
+ 
+          />
+
+          <label for="input-1">
+            <span class="label-text">Mother Name</span>
+            <span class="nav-dot"></span>
+            <div class="signup-button-trigger" style="width: 200px">
+              Register
+            </div>
+          </label>
+
+
+
+            <input
+              id="input-2"
+              type="text"
+              placeholder="Enter Child father name"
+              name="fathername"
+           style="width: 900px;"
+   
+            />
+          <label for="input-2">
+            <span class="label-text">Fathername</span>
+            <span class="nav-dot"></span>
+          </label>
+
+          <input
+            id="input-3"
+            type="text"
+            placeholder="Enter e-mail ID"
+            name="email"
+         style="width: 900px;"
+ 
+          />
+          <label for="input-3">
+            <span class="label-text">Email</span>
+            <span class="nav-dot"></span>
+          </label>
+
+        
+
+
+          <input
+            id="input-4"
+            type="text"
+            placeholder="Enter Contact"
+            name="contact"
+         style="width: 900px;"
+ 
+          />
+          <label for="input-4">
+            <span class="label-text">Contact</span>
+            <span class="nav-dot"></span>
+          </label>
+
+
+          <input id="input-5"
+            style="width: 900px;"
+            type="text"
+             placeholder="Enter Address" 
+             name="address" />
+          <label for="input-5">
+            <span class="label-text">Address</span>
+            <span class="nav-dot"></span>
+          </label>
+
+          <input id="input-7"
+          style="width: 900px;"
+             type="file" placeholder="Upload Picture"  name="image" />
+           <label for="input-7">
+             <span class="label-text">Upload Picture</span>
+             <span class="nav-dot"></span>
+           </label>
+
+
+
+          <!-- <input id="input-6"
+         style="width: 900px;"
+            type="file" placeholder="Qrcode" name="QRcode" />
+          <label for="input-6">
+            <span class="label-text"> Generate QRcode</span>
+            <span class="nav-dot"></span>
+             <img src=
+            "https://chart.googleapis.com/chart?cht=qr&chl=Hello+World&chs=160x160&chld=L|0"
+                    class="qr-code img-thumbnail img-responsive" /> 
+          </label>  -->
+
+         
+         
+          <button type="submit" class="btnn" style="width: 200px">Register</button>
+           <p class="tip">Press Tab</p>
+           <div class="signup-button" style="width: 200px">Register</div> 
+        </form>
+      </section>
+                  
+            
+
+        <!-- <div class="container-fluid" id="container-wrapper">
+          <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h3 mb-0 text-gray-800">Blank Page</h1>
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="./">Home</a></li>
+              <li class="breadcrumb-item">Pages</li>
+              <li class="breadcrumb-item active" aria-current="page">Blank Page</li>
+            </ol>
+          </div>
+
+          <div class="text-center">
+            <img src="img/think.svg" style="max-height: 90px">
+            <h4 class="pt-3">save your <b>imagination</b> here!</h4>
+          </div>
+
+          <!-- Modal Logout -->
+          <!-- <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelLogout"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabelLogout">Ohh No!</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <p>Are you sure you want to logout?</p>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Cancel</button>
+                  <a href="login.html" class="btn btn-primary">Logout</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div> --> 
+        <!---Container Fluid-->
+      </div>
+      <!-- Footer -->
+      <footer class="sticky-footer bg-white">
+        <div class="container my-auto">
+          <div class="copyright text-center my-auto">
+            <span>copyright &copy; <script> document.write(new Date().getFullYear()); </script> - developed by
+              <b><a href="https://manacinfotech.com" target="_blank">manacinfotech</a></b>
+            </span>
+          </div>
+        </div>
+      </footer>
+      <!-- Footer -->
+    </div>
+  </div>
+
+  <!-- Scroll to top -->
+  <a class="scroll-to-top rounded" href="{% static 'admin/#page-top' %}">
+    <i class="fas fa-angle-up"></i>
+  </a>
+
+  <script src="{% static 'admin/vendor/jquery/jquery.min.js' %}"></script>
+  <script src="{% static 'admin/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'admin/vendor/jquery-easing/jquery.easing.min.js' %}"></script>
+  <script src="{% static 'admin/js/ruang-admin.min.js' %}"></script>
+  <script src="{% static 'admin/vendor/chart.js/Chart.min.js' %}"></script>
+  <script src="{% static 'admin/js/demo/chart-area-demo.js' %}"></script>  
+
+</body>
+
+</html>

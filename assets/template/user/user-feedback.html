@@ -1,0 +1,382 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+  <!-- Basic -->
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <!-- Mobile Metas -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <!-- Site Metas -->
+  <meta name="keywords" content="" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+
+  <title>School Bus Tracking</title>
+
+
+
+  <!-- bootstrap core css -->
+  <link rel="stylesheet" type="text/css" href="{% static 'user/css/bootstrap.css' %}" />
+  <!-- progress barstle -->
+  <link rel="stylesheet" href="{% static 'user/css/css-circular-prog-bar.css' %}">
+  <!-- fonts style -->
+  <link href="https://fonts.googleapis.com/css?family=Poppins:400,700&display=swap" rel="stylesheet">
+  <!-- font wesome stylesheet -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  <!-- Custom styles for this template -->
+  <link href="{% static 'user/css/style.css' %}" rel="stylesheet" />
+  <!-- responsive style -->
+  <link href="{% static 'user/css/responsive.css' %}" rel="stylesheet" />
+
+
+
+
+  <link rel="stylesheet" href="{% static 'user/css/css-circular-prog-bar.css' %}">
+  <style>
+    @import url(https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css);
+@import url(http://fonts.googleapis.com/css?family=Calibri:400,300,700);
+
+body {
+ background-color: #f1effd;
+ font-family: 'Calibri', sans-serif !important
+}
+
+fieldset, label { margin: 0; padding: 0; }
+body{ margin: 20px; }
+h1 { font-size: 1.5em; margin: 10px; }
+
+/****** Style Star Rating Widget *****/
+
+.rating { 
+  border: none;
+  margin-right: 49px;
+
+}
+.myratings{
+
+font-size: 85px;
+color: green;
+}
+
+.rating > [id^="star"] { display: none; } 
+.rating > label:before { 
+margin: 5px;
+font-size: 2.25em;
+font-family: FontAwesome;
+display: inline-block;
+content: "\f005";
+}
+
+.rating > .half:before { 
+content: "\f089";
+position: absolute;
+}
+
+.rating > label { 
+color: #ddd; 
+float: right; 
+}
+
+/***** CSS Magic to Highlight Stars on Hover *****/
+
+.rating > [id^="star"]:checked ~ label, /* show gold star when clicked */
+.rating:not(:checked) > label:hover, /* hover current star */
+.rating:not(:checked) > label:hover ~ label { color: #FFD700;  } /* hover previous stars in list */
+
+.rating > [id^="star"]:checked + label:hover, /* hover current star when changing rating */
+.rating > [id^="star"]:checked ~ label:hover,
+.rating > label:hover ~ [id^="star"]:checked ~ label, /* lighten current selection */
+.rating > [id^="star"]:checked ~ label:hover ~ label { color: #FFED85;  }
+
+.reset-option {
+display: none;
+}
+
+.reset-button {
+margin: 6px 12px;
+background-color: rgb(255, 255, 255);
+text-transform: uppercase;
+}
+
+
+
+.mt-100 {
+ margin-top: 100px
+}
+
+.card {
+justify-content: center;
+position: relative;
+ display: flex;
+ width: 350px;
+ flex-direction: column;
+ min-width: 0;
+ word-wrap: break-word;
+ background-color: #fff;
+ background-clip: border-box;
+ border: 1px solid #d2d2dc;
+ border-radius: 11px;
+ -webkit-box-shadow: 0px 0px 5px 0px rgb(249, 249, 250);
+ -moz-box-shadow: 0px 0px 5px 0px rgba(212, 182, 212, 1);
+ box-shadow: 0px 0px 5px 0px rgb(161, 163, 164)
+}
+
+.card .card-body {
+justify-content: center;
+ padding: 1rem 1rem
+}
+
+.card-body {
+justify-content: center;
+ flex: 1 1 auto;
+ padding: 1.25rem
+}
+
+p {
+ font-size: 14px
+}
+
+h4 {
+ margin-top: 18px
+}
+
+.btn:focus {
+ outline: none
+}
+
+.btn {
+ border-radius: 22px;
+ text-transform: capitalize;
+ font-size: 13px;
+ padding: 8px 19px;
+ cursor: pointer;
+ color: #fff;
+ background-color: #362976
+}
+
+.btn:hover {
+ background-color: #1e1874 !important
+}
+</style>
+<script>
+  $(document).ready(function(){
+
+      $("input[type='radio']").click(function(){
+            var sim =  $("input[type='radio']:checked").val();
+            //alert(sim);
+            if (sim<3) {
+            $('.myratings').css('color','red'); 
+            $(".myratings").text(sim);
+         }else{
+            $('.myratings').css('color','green');
+            $(".myratings").text(sim);
+         }
+         });
+
+
+      });
+</script>
+
+
+</head>
+
+<body>
+  <div class="top_container sub_pages ">
+    <!-- header section strats -->
+    <header class="header_section">
+      <div class="container">
+        <nav class="navbar navbar-expand-lg custom_nav-container ">
+          <a class="navbar-brand" href="{% url 'user_index' %}">
+            <img src="{% static 'user/images/logo.png' %}" alt="">
+            <span>
+              School Bus Tracking
+            </span>
+          </a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <div class="d-flex ml-auto flex-column flex-lg-row align-items-center">
+              <ul class="navbar-nav  ">
+                <li class="nav-item active">
+                  <a class="nav-link " href="{% url 'user_index' %}"> Home <span class="sr-only">(current)</span></a>
+                </li>
+                <!-- <li class="nav-item ">
+                  <a class="nav-link text-white" href="{% url 'user_about' %}"> About </a>
+                </li> -->
+
+                <li class="nav-item active ">
+                  <a class="nav-link " href="{% url 'user_myprofile' %}"> My profile</a>
+                </li>
+                <li class="nav-item active ">
+                    <a class="nav-link " href="{% url 'user_changepassword' %}"> Change Password</a>
+                  </li>
+                  <li class="nav-item active ">
+                    <a class="nav-link" href="{% url 'boarding_status' %}"> Board Status</a>
+                  </li>
+                  <li class="nav-item active ">
+                    <a class="nav-link" href="{% url 'dropping_status' %}"> Drop Status</a>
+                  </li>
+
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'user_view_status' %}"> Track</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'user_feedback' %}"> FeedBack</a>
+                </li>
+
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'main_index' %}">Logout</a>
+                </li>
+
+              </ul>
+              <!-- <form class="form-inline my-2 my-lg-0 ml-0 ml-lg-4 mb-3 mb-lg-0">
+                <button class="btn  my-2 my-sm-0 nav_search-btn" type="submit"></button>
+              </form> -->
+            </div>
+        </nav>
+      </div>
+    </header>
+  </div>
+  <!-- end header section -->
+  <form method="POST" >
+    {% csrf_token %}
+<div class="container d-flex justify-content-center mt-5">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body text-center"> 
+                 <!-- <span class="myratings">5</span> -->
+                    <h4 class="mt-1">Rate us</h4>
+                    
+                        <fieldset class="rating text-center">
+                            
+                            <input type="radio" id="star5" name="rating" value="5" /><label class = "full" style="justify-content: center;" for="star5" title="Awesome - 5 stars"></label>
+                            <!-- <input type="radio" id="star4half" name="rating" value="4.5" /><label class="half" for="star4half" title="Pretty good - 4.5 stars"></label> -->
+                            <input type="radio" id="star4" name="rating" value="4" /><label class = "full" for="star4" title="Pretty good - 4 stars"></label>
+                            <!-- <input type="radio" id="star3half" name="rating" value="3.5" /><label class="half" for="star3half" title="Meh - 3.5 stars"></label> -->
+                            <input type="radio" id="star3" name="rating" value="3" /><label class = "full" for="star3" title="Meh - 3 stars"></label>
+                            <!-- <input type="radio" id="star2half" name="rating" value="2.5" /><label class="half" for="star2half" title="Kinda bad - 2.5 stars"></label> -->
+                            <input type="radio" id="star2" name="rating" value="2" /><label class = "full" for="star2" title="Kinda bad - 2 stars"></label>
+                            <!-- <input type="radio" id="star1half" name="rating" value="1.5" /><label class="half" for="star1half" title="Meh - 1.5 stars"></label> -->
+                            <input type="radio" id="star1" name="rating" value="1" /><label class = "full" for="star1" title="Sucks big time - 1 star"></label>
+                            <!-- <input type="radio" id="starhalf" name="rating" value="0.5" /><label class="half" for="starhalf" title="Sucks big time - 0.5 stars"></label> -->
+                            <input type="radio" class="reset-option" name="rating" value="reset" />
+                        </fieldset>
+
+                    
+                    <h5 class="'mt-2">Feedback</h5>
+                </div>
+                <!-- <div class="col-md-8">
+                    <div class="card-body">
+                        <textarea row="30" col="40"></textarea>
+                    </div>
+                </div> -->
+                <textarea style="border-radius: 40px;" name="text" id="" cols="10" rows="10"></textarea>
+                <center>
+                    <button style="width: 100px;" class="mt-4 mb-3 btn btn-primary" type="submit">submit</button>
+
+                </center>
+           
+            </div>
+        </div>
+    </div>
+</div>
+</form>
+  <!-- contact section -->
+
+  <!-- <section class="contact_section layout_padding">
+    <div class="container">
+
+      <h2 class="main-heading">
+        Contact Now
+
+      </h2>
+      <p class="text-center">
+        reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+
+      </p>
+      <div class="">
+        <div class="contact_section-container">
+          <div class="row">
+            <div class="col-md-6 mx-auto">
+              <div class="contact-form">
+                <form action="">
+                  <div>
+                    <input type="text" placeholder="Name">
+                  </div>
+                  <div>
+                    <input type="text" placeholder="Phone Number">
+                  </div>
+                  <div>
+                    <input type="email" placeholder="Email">
+                  </div>
+                  <div>
+                    <input type="text" placeholder="Message" class="input_message">
+                  </div>
+                  <div class="d-flex justify-content-center">
+                    <button type="submit" class="btn_on-hover">
+                      Send
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section> -->
+
+
+  <!-- end contact section -->
+
+  <!-- footer section -->
+  <section class="container-fluid footer_section">
+    <p>
+      Copyright &copy; Codebook. All Rights Reserved By
+      <a href="https://manacinfotech.com">Codebook</a>
+    </p>
+  </section>
+  <!-- footer section -->
+
+  <script type="text/javascript" src="{% static 'user/js/jquery-3.4.1.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'user/js/bootstrap.js' %}"></script>
+  <!-- progreesbar script -->
+
+  </script>
+  <script>
+    // This example adds a marker to indicate the position of Bondi Beach in Sydney,
+    // Australia.
+    function initMap() {
+      var map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 11,
+        center: {
+          lat: 40.645037,
+          lng: -73.880224
+        },
+      });
+
+      var image = 'images/maps-and-flags.png';
+      var beachMarker = new google.maps.Marker({
+        position: {
+          lat: 40.645037,
+          lng: -73.880224
+        },
+        map: map,
+        icon: image
+      });
+    }
+  </script>
+  <!-- google map js -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8eaHt9Dh5H57Zh0xVTqxVdBFCvFMqFjQ&callback=initMap">
+  </script>
+  <!-- end google map js -->
+</body>
+
+</html>

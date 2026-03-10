@@ -1,0 +1,606 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link href="{% static 'admin/img/logo/logo.png' %}" rel="icon">
+  <title>School Bus Tracking</title>
+  <link href="{% static 'admin/vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
+  <link href="{% static 'admin/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css">
+  <link href="{% static 'admin/css/ruang-admin.min.css' %}" rel="stylesheet">
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+</head>
+
+<body id="page-top">
+  <div id="wrapper">
+    <!-- Sidebar -->
+    <ul class="navbar-nav sidebar sidebar-light accordion" id="accordionSidebar">
+      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{% url 'admin_index' %}">
+        <div class="sidebar-brand-icon">
+          <img src="{% static 'admin/img/logo/logo2.png' %}">
+        </div>
+        <div class="sidebar-brand-text mx-3">School Bus Tracking</div>
+      </a>
+      <hr class="sidebar-divider my-0">
+      <li class="nav-item active">
+        <a class="nav-link" href="{% url 'admin_index' %}">
+          <i class="fas fa-fw fa-tachometer-alt"></i>
+          <span>Admin-Dashboard</span></a>
+      </li>
+      <hr class="sidebar-divider">
+      <!-- <div class="sidebar-heading">
+        Features
+      </div> -->
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseBootstrap"
+          aria-expanded="true" aria-controls="collapseBootstrap">
+          <i class="far fa-fw fa-window-maximize"></i>
+          <span>Student Management Portal</span>
+        </a>
+        <div id="collapseBootstrap" class="collapse" aria-labelledby="headingBootstrap" data-parent="#accordionSidebar">
+          <div class="bg-white py-2 collapse-inner rounded">
+            <!-- <h6 class="collapse-header">Bootstrap UI</h6> -->
+            <a class="collapse-item" href="{% url 'admin_addnewstudent' %}">Add Student</a>
+            <a class="collapse-item" href="{% url 'admin_managestudent' %}">Manage Student</a>
+           
+          </div>
+        </div>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseBootstrap"
+          aria-expanded="true" aria-controls="collapseBootstrap">
+          <i class="far fa-fw fa-window-maximize"></i>
+          <span>Bus Delay Update</span>
+        </a>
+        <div id="collapseBootstrap" class="collapse" aria-labelledby="headingBootstrap" data-parent="#accordionSidebar">
+          <div class="bg-white py-2 collapse-inner rounded">
+            <!-- <h6 class="collapse-header">Bootstrap UI</h6> -->
+            <a class="collapse-item" href="{% url 'admin_busdelay' %}">Bus Delay Update</a>
+            <!-- <a class="collapse-item" href="admin-manage-student.html">Manage Student</a> -->
+           
+          </div>
+        </div>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseBootstrap"
+          aria-expanded="true" aria-controls="collapseBootstrap">
+          <i class="far fa-fw fa-window-maximize"></i>
+          <span>Feedback Analysis</span>
+        </a>
+        <div id="collapseBootstrap" class="collapse" aria-labelledby="headingBootstrap" data-parent="#accordionSidebar">
+          <div class="bg-white py-2 collapse-inner rounded">
+            <!-- <h6 class="collapse-header">Bootstrap UI</h6> -->
+            <a class="collapse-item" href="{% url 'admin_feedbackanalysis' %}">Feedback Analysis</a>
+            <a class="collapse-item" href="{% url 'admin_sentimentanalysis' %}">Sentiment Analysis</a> 
+           
+          </div>
+        </div>
+      </li>
+      
+      <hr class="sidebar-divider">
+      <div class="version" id="version-School Bus Tracking"></div>
+    </ul>
+    <!-- Sidebar -->
+    <div id="content-wrapper" class="d-flex flex-column">
+      <div id="content">
+        <!-- TopBar -->
+        <nav class="navbar navbar-expand navbar-light bg-navbar topbar mb-4 static-top">
+          <button id="sidebarToggleTop" class="btn btn-link rounded-circle mr-3">
+            <i class="fa fa-bars"></i>
+          </button>
+          <ul class="navbar-nav ml-auto">
+            <!-- <li class="nav-item dropdown no-arrow">
+              <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-search fa-fw"></i>
+              </a>
+              <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
+                aria-labelledby="searchDropdown">
+                <form class="navbar-search">
+                  <div class="input-group">
+                    <input type="text" class="form-control bg-light border-1 small" placeholder="What do you want to look for?"
+                      aria-label="Search" aria-describedby="basic-addon2" style="border-color: #3f51b5;">
+                    <div class="input-group-append">
+                      <button class="btn btn-primary" type="button">
+                        <i class="fas fa-search fa-sm"></i>
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </li> -->
+            <!-- <li class="nav-item dropdown no-arrow mx-1">
+              <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-bell fa-fw"></i>
+                <span class="badge badge-danger badge-counter">3+</span>
+              </a>
+              <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                aria-labelledby="alertsDropdown">
+                <h6 class="dropdown-header">
+                  Alerts Center
+                </h6>
+                
+               
+               
+                <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
+              </div>
+            </li> -->
+            <!-- <li class="nav-item dropdown no-arrow mx-1">
+              <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-envelope fa-fw"></i>
+                <span class="badge badge-warning badge-counter">2</span>
+              </a>
+              <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                aria-labelledby="messagesDropdown">
+                <h6 class="dropdown-header">
+                  Message Center
+                </h6>
+               
+               
+                <a class="dropdown-item text-center small text-gray-500" href="#">Read More Messages</a>
+              </div>
+            </li> -->
+            <!-- <li class="nav-item dropdown no-arrow mx-1">
+              <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-tasks fa-fw"></i>
+                <span class="badge badge-success badge-counter">3</span>
+              </a>
+              <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                aria-labelledby="messagesDropdown">
+                <h6 class="dropdown-header">
+                  Task
+                </h6>
+                
+               
+               
+                <a class="dropdown-item text-center small text-gray-500" href="#">View All Taks</a>
+              </div>
+            </li> -->
+            <div class="topbar-divider d-none d-sm-block"></div>
+            <li class="nav-item dropdown no-arrow">
+              <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                <img class="img-profile rounded-circle" src="{% static 'admin/img/boy.png' %}" style="max-width: 60px">
+                <span class="ml-2 d-none d-lg-inline text-white small">Administrator</span>
+              </a>
+              <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                
+               
+                
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="{% url 'main_index' %}" >
+                  <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                  Logout
+                </a>
+              </div>
+            </li>
+          </ul>
+        </nav>
+        <!-- Topbar -->
+
+        <!-- Container Fluid-->
+        <div class="container-fluid" id="container-wrapper">
+          <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h3 mb-0 text-gray-800">Admin-Dashboard</h1>
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="{% url 'admin_index' %}">Dashboard</a></li>
+              <li class="breadcrumb-item"><a href="{% url 'admin_addnewstudent' %}">Add New Student</a></li>
+              <li class="breadcrumb-item"><a href="{% url 'admin_managestudent' %}">Manage Student</a></li>
+              <li class="breadcrumb-item"><a href="{% url 'admin_busdelay' %}">Bus Delay Update</a></li>
+              <li class="breadcrumb-item"><a href="{% url 'admin_feedbackanalysis' %}">Feedback Analysis</a></li>
+              <li class="breadcrumb-item"><a href="{% url 'admin_sentimentanalysis' %}">Sentiment Analysis</a></li>
+
+            </ol>
+          </div>
+
+          <div class="row mb-3">
+            <!-- Earnings (Monthly) Card Example -->
+            <div class="col-xl-3 col-md-6 mb-4">
+              <div class="card h-100">
+                <div class="card-body">
+                  <div class="row align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-uppercase mb-1">Number of children</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800">{{children}}</div>
+                      <div class="mt-2 mb-0 text-muted text-xs">
+                        <!-- <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
+                        <span>Since last month</span> -->
+                      </div>
+                    </div>
+                    <!-- <div class="col-auto">
+                      <i class="fas fa-calendar fa-2x text-primary"></i>
+                    </div> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Earnings (Annual) Card Example -->
+            <div class="col-xl-3 col-md-6 mb-4">
+              <div class="card h-100">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-uppercase mb-1">Number of Buses</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800">65</div>
+                      <!-- <div class="mt-2 mb-0 text-muted text-xs">
+                        <span class="text-success mr-2"><i class="fas fa-arrow-up"></i> 12%</span>
+                        <span>Since last years</span>
+                      </div> -->
+                    </div>
+                    <!-- <div class="col-auto">
+                      <i class="fas fa-shopping-cart fa-2x text-success"></i>
+                    </div> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- New User Card Example -->
+            <div class="col-xl-3 col-md-6 mb-4">
+              <div class="card h-100">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-uppercase mb-1">Number of Campuses</div>
+                      <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">6</div>
+                      <!-- <div class="mt-2 mb-0 text-muted text-xs">
+                        <span class="text-success mr-2"><i class="fas fa-arrow-up"></i> 20.4%</span>
+                        <span>Since last month</span>
+                      </div> -->
+                    </div>
+                    <!-- <div class="col-auto">
+                      <i class="fas fa-users fa-2x text-info"></i>
+                    </div> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Pending Requests Card Example -->
+            <div class="col-xl-3 col-md-6 mb-4">
+              <div class="card h-100">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-uppercase mb-1">Number of Teachers</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800">200</div>
+                      <!-- <div class="mt-2 mb-0 text-muted text-xs">
+                        <span class="text-danger mr-2"><i class="fas fa-arrow-down"></i> 1.10%</span>
+                        <span>Since yesterday</span>
+                      </div> -->
+                    </div>
+                    <!-- <div class="col-auto">
+                      <i class="fas fa-comments fa-2x text-warning"></i>
+                    </div> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Area Chart -->
+            <div class="col-xl-8 col-lg-7">
+              <div class="card mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                  <h6 class="m-0 font-weight-bold text-primary">Monthly Recap Report</h6>
+                  <div class="dropdown no-arrow">
+                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
+                      aria-haspopup="true" aria-expanded="false">
+                      <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                      aria-labelledby="dropdownMenuLink">
+                      <div class="dropdown-header">Dropdown Header:</div>
+                      <a class="dropdown-item" href="#">Action</a>
+                      <a class="dropdown-item" href="#">Another action</a>
+                      <div class="dropdown-divider"></div>
+                      <a class="dropdown-item" href="#">Something else here</a>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <div class="chart-area">
+                    <canvas id="myAreaChart"></canvas>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Pie Chart -->
+            <div class="col-xl-4 col-lg-5">
+              <div class="card mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                  <h6 class="m-0 font-weight-bold text-primary">Products Sold</h6>
+                  <div class="dropdown no-arrow">
+                    <a class="dropdown-toggle btn btn-primary btn-sm" href="#" role="button" id="dropdownMenuLink"
+                      data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      Month <i class="fas fa-chevron-down"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                      aria-labelledby="dropdownMenuLink">
+                      <div class="dropdown-header">Select Periode</div>
+                      <a class="dropdown-item" href="#">Today</a>
+                      <a class="dropdown-item" href="#">Week</a>
+                      <a class="dropdown-item active" href="#">Month</a>
+                      <a class="dropdown-item" href="#">This Year</a>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <div class="mb-3">
+                    <div class="small text-gray-500">Oblong T-Shirt
+                      <div class="small float-right"><b>600 of 800 Items</b></div>
+                    </div>
+                    <div class="progress" style="height: 12px;">
+                      <div class="progress-bar bg-warning" role="progressbar" style="width: 80%" aria-valuenow="80"
+                        aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                  </div>
+                  <div class="mb-3">
+                    <div class="small text-gray-500">Gundam 90'Editions
+                      <div class="small float-right"><b>500 of 800 Items</b></div>
+                    </div>
+                    <div class="progress" style="height: 12px;">
+                      <div class="progress-bar bg-success" role="progressbar" style="width: 70%" aria-valuenow="70"
+                        aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                  </div>
+                  <div class="mb-3">
+                    <div class="small text-gray-500">Rounded Hat
+                      <div class="small float-right"><b>455 of 800 Items</b></div>
+                    </div>
+                    <div class="progress" style="height: 12px;">
+                      <div class="progress-bar bg-danger" role="progressbar" style="width: 55%" aria-valuenow="55"
+                        aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                  </div>
+                  <div class="mb-3">
+                    <div class="small text-gray-500">Indomie Goreng
+                      <div class="small float-right"><b>400 of 800 Items</b></div>
+                    </div>
+                    <div class="progress" style="height: 12px;">
+                      <div class="progress-bar bg-info" role="progressbar" style="width: 50%" aria-valuenow="50"
+                        aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                  </div>
+                  <div class="mb-3">
+                    <div class="small text-gray-500">Remote Control Car Racing
+                      <div class="small float-right"><b>200 of 800 Items</b></div>
+                    </div>
+                    <div class="progress" style="height: 12px;">
+                      <div class="progress-bar bg-success" role="progressbar" style="width: 30%" aria-valuenow="30"
+                        aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-footer text-center">
+                  <a class="m-0 small text-primary card-link" href="#">View More <i
+                      class="fas fa-chevron-right"></i></a>
+                </div>
+              </div>
+            </div>
+       
+          </div>
+          <!--Row-->
+
+          <div class="row">
+            <div class="col-lg-12 text-center">
+              <p>Do you like this template ? you can download from <a href="https://github.com/indrijunanda/School Bus Tracking"
+                  class="btn btn-primary btn-sm" target="_blank"><i class="fab fa-fw fa-github"></i>&nbsp;GitHub</a></p>
+            </div>
+          </div>
+
+          <!-- Modal Logout -->
+          <!-- <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelLogout"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabelLogout">Ohh No!</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <p>Are you sure you want to logout?</p>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Cancel</button>
+                  <a href="login.html" class="btn btn-primary">Logout</a>
+                </div>
+              </div>
+            </div>
+          </div> -->
+
+        </div>
+        <!---Container Fluid-->
+      </div>
+      <!-- Footer -->
+      <footer class="sticky-footer bg-white">
+        <div class="container my-auto">
+          <div class="copyright text-center my-auto">
+            <span>copyright &copy; <script> document.write(new Date().getFullYear()); </script> - developed by
+              <b><a href="https://manacinfotech.com" target="_blank">manacinfotech</a></b>
+            </span>
+          </div>
+        </div>
+
+        <div class="container my-auto py-2">
+          <!-- <div class="copyright text-center my-auto">
+            <span>copyright &copy; <script> document.write(new Date().getFullYear()); </script> - distributed by
+              <b><a href="https://themewagon.com/" target="_blank">themewagon</a></b>
+            </span>
+          </div> -->
+        </div>
+      </footer>
+      <!-- Footer -->
+    </div>
+  </div>
+  {% if messages %}
+        {% for message in messages %}
+        {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+        <script>swal({
+                title: "Admin Login Successfully!",
+                text: "{{message}}",
+                icon: "success",
+                button: "OK",
+            });
+        </script>
+
+        {% elif message.level == DEFAULT_MESSAGE_LEVELS.WARNING %}
+        <script>swal({
+                title: "Warning :)",
+                text: "{{message}}",
+                icon: "warning",
+                button: "OK",
+            });
+        </script>
+        {% elif message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
+        <script>swal({
+                title: "error :)",
+                text: "{{message}}",
+                icon: "error",
+                button: "OK",
+            });
+        </script>
+        {% elif message.level == DEFAULT_MESSAGE_LEVELS.DANGER %}
+        <script>swal({
+                title: "error :)",
+                text: "{{message}}",
+                icon: "error",
+                button: "OK",
+            });
+        </script>
+        {% endif %}
+        {% endfor %}
+        {% endif %}
+
+        <script type="text/javascript">
+          function loginvalidation() {
+            var Email = document.myform.email
+            var Passw = /^(?=.[0-9])(?=.[!@#$%^&])[a-zA-Z0-9!@#$%^&]{5,16}$/;
+            var mailformat = /^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/;
+            var Password = document.myform.password
+            var Name = document.myform.fullname
+            var Contact = document.myform.contact
+            var AadharPhoto = document.myform.aadharphoto
+            var GSTPhoto = document.myform.gstphoto
+            // var StudentID = document.myform.studentID
+            // var Branch = document.myform.branch
+            // var Year = document.myform.year
+            // var Mobilenumber = document.myform.user_mobile
+            // var Typeuser = document.myform.user_birth
+            var Photo = document.myform.photo
+      
+            
+      
+            if (Name.value == "") {
+                alert("Please Enter Your Full Name:");
+              Name.focus();
+              return false;
+            }
+            if (Contact.value == "") {
+                alert("Please Enter Your Contact Number:");
+                Contact.focus();
+                return false;
+            }
+            // if (StudentID.value == "") {
+            // 	alert("Please Enter Your StudentID Number:");
+            // 	StudentID.focus();
+            // 	return false;
+            // }
+            // if (Branch.value == "") {
+            // 	alert("Please Enter Your Branch:");
+            // 	Branch.focus();
+            // 	return false;
+            // }
+            // if (Year.value == "") {
+            // 	alert("Please Choose your Year of Study:");
+            // 	Year.focus();
+            // 	return false;
+            // }
+            // if (Mobilenumber.value.length != 10) {
+      
+            //     alert("please Enter valid mobile number");
+      
+            //     return false;
+      
+            // }
+      
+            // if (Mobilenumber.value.length <= 0) {
+      
+            //     alert("Please Enter Mobile Number");
+      
+            //     return false;
+            // }
+             
+            if (Email.value == "") {
+              alert("Please Enter Your Email Address");
+              Email.focus();
+              return false;
+            }
+      
+            if (!Email.value.match(mailformat)) {
+              alert("Invalid Email format");
+              Email.focus();
+              return false;
+            }
+            // if (Typeuser.value == ""){
+      
+            //     alert("Please Select DOB: ");
+            //     Typeuser.focus();
+      
+            //     return false;
+            // }
+            if (Password.value.length <= 0) {
+              alert("Please Enter Your Password")
+              Password.focus();
+              return false;
+            }
+            // if (!Password.value.match(passw)) {
+            //     alert("password should must be special Characters and Numbers")
+            //     Password.focus();
+            //     return false;
+            // }
+            if (Password.value.length < 6) {
+              alert("password should not be less then six Characters")
+              Password.focus();
+              return false;
+            }
+            
+            if (AadharPhoto.value == "") {
+              alert("Please Upload Aadhar Image:");
+              AadharPhoto.focus();
+              return false;
+            }   
+            if (GSTPhoto.value == "") {
+              alert("Please Upload GST Invoice Bill Image:");
+              GSTPhoto.focus();
+              return false;
+            }
+            if (Photo.value == "") {
+              alert("Please Upload Profile Image:");
+              Photo.focus();
+              return false;
+            }      
+          }
+        </script>
+
+  <!-- Scroll to top -->
+  <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+  </a>
+
+  <script src="{% static 'admin/vendor/jquery/jquery.min.js' %}"></script>
+  <script src="{% static 'admin/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'admin/vendor/jquery-easing/jquery.easing.min.js' %}"></script>
+  <script src="{% static 'admin/js/ruang-admin.min.js' %}"></script>
+  <script src="{% static 'admin/vendor/chart.js/Chart.min.js' %}"></script>
+  <script src="{% static 'admin/js/demo/chart-area-demo.js' %}"></script>  
+</body>
+
+</html>

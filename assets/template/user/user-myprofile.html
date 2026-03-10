@@ -1,0 +1,225 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+  <!-- Basic -->
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <!-- Mobile Metas -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <!-- Site Metas -->
+  <meta name="keywords" content="" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+
+  <title>School Bus Tracking</title>
+
+
+
+  <!-- bootstrap core css -->
+  <link rel="stylesheet" type="text/css" href="{% static 'user/css/bootstrap.css' %}" />
+  <!-- progress barstle -->
+  <link rel="stylesheet" href="{% static 'user/css/css-circular-prog-bar.css' %}">
+  <!-- fonts style -->
+  <link href="https://fonts.googleapis.com/css?family=Poppins:400,700&display=swap" rel="stylesheet">
+  <!-- font wesome stylesheet -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  <!-- Custom styles for this template -->
+  <link href="{% static 'user/css/style.css' %}" rel="stylesheet" />
+  <!-- responsive style -->
+  <link href="{% static 'user/css/responsive.css' %}" rel="stylesheet" />
+
+
+
+
+  <link rel="stylesheet" href="{% static 'user/css/css-circular-prog-bar.css' %}">
+ 
+
+
+
+</head>
+
+
+<body>
+  <div class="top_container sub_pages ">
+    <!-- header section strats -->
+    <header class="header_section">
+      <div class="container">
+        <nav class="navbar navbar-expand-lg custom_nav-container ">
+          <a class="navbar-brand" href="{% url 'user_index' %}">
+            <img src="{% static 'user/images/logo.png' %}" alt="">
+            <span>
+              School Bus Tracking
+            </span>
+          </a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <div class="d-flex ml-auto flex-column flex-lg-row align-items-center">
+              <ul class="navbar-nav  ">
+                <li class="nav-item active">
+                  <a class="nav-link " href="{% url 'user_index' %}"> Home <span class="sr-only">(current)</span></a>
+                </li>
+                <!-- <li class="nav-item ">
+                  <a class="nav-link text-white" href="{% url 'user_about' %}"> About </a>
+                </li> -->
+
+                <li class="nav-item active ">
+                  <a class="nav-link " href="{% url 'user_myprofile' %}"> My profile</a>
+                </li>
+                <li class="nav-item active ">
+                    <a class="nav-link " href="{% url 'user_changepassword' %}"> Change Password</a>
+                  </li>
+                  <li class="nav-item active ">
+                    <a class="nav-link" href="{% url 'boarding_status' %}"> Board Status</a>
+                  </li>
+                  <li class="nav-item active ">
+                    <a class="nav-link" href="{% url 'dropping_status' %}"> Drop Status</a>
+                  </li>
+
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'user_view_status' %}"> Track</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'notification_status' %}"> Notification</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'user_feedback' %}"> FeedBack</a>
+                </li>
+
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'main_index' %}">Logout</a>
+                </li>
+
+              </ul>
+              <!-- <form class="form-inline my-2 my-lg-0 ml-0 ml-lg-4 mb-3 mb-lg-0">
+                <button class="btn  my-2 my-sm-0 nav_search-btn" type="submit"></button>
+              </form> -->
+            </div>
+        </nav>
+      </div>
+    </header>
+  </div>
+  <!-- end header section -->
+  <div class="container rounded bg-white mt-5 mb-5">
+       
+    <form class="contact-form" method="post" enctype="multipart/form-data" onsubmit='return loginvalidation();' name='myform'>
+    <div class="row">
+        <!-- <form action="" method="post" enctype="multipart/form-data"> -->
+    
+        <div class="col-md-4 border-right">
+            <div class="d-flex flex-column align-items-center text-center p-3 ">
+                <img class="  mt-5" style="border-radius: 525px; height:300px ; width:200px;" src="/media/{{user.children_image}}"><span
+                    class="font-weight-bold"></span><span class="text-black-50"></span><span>
+                </span></div>
+        </div>
+        <div class="col-md-7 border-right">
+            <div class="p-3 py-5">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="text-right">Children Profile</h4>
+                </div>
+                <div class="row mt-2">
+                
+
+                    <div class="col-md-6"><label class="labels">Child ID</label><input readonly type="text" class="form-control"
+                            placeholder="first name" value="{{user.children_rollnum}}"  name="name"></div>
+
+                    <div class="col-md-6"><label  class="labels" >Child Name</label><input readonly type="text"
+                        name="dob"     class="form-control" value="{{user.children_name}}"  ></div> 
+
+                    <div class="col-md-6"><label  class="labels">Child Class</label><input readonly type="text"
+                            class="form-control" name="class"  value="{{user.children_class}}" placeholder="Child Class"></div>
+                   
+                    <div class="col-md-6"><label class="labels">Child Mother Name</label><input readonly type="text"
+                            class="form-control" name="mothername" value="{{user.children_mothername}}"     placeholder="Your password"></div>
+                            
+                    <div class="col-md-6"><label class="labels">Child Father Name</label><input readonly  type="text"
+                              class="form-control" name="password" value="{{user.children_fathername}}"     placeholder="Your password"></div>
+                    <div class="col-md-6"><label class="labels">Child Email</label><input readonly type="text"
+                                class="form-control" name="password" value="{{user.children_email}}"     placeholder="Your password"></div>
+                    
+                    <div class="col-md-6"><label class="labels" >Contact</label><input readonly type="text"
+                            class="form-control" name="contact" value="{{user.children_contact}}" placeholder="Your Phone"></div>
+                   
+                            <div class="col-md-6"><label class="labels">Address</label><input readonly type="text"
+                            class="form-control" name="city" value="{{user.children_address}}"   placeholder="Your City" ></div>
+                    
+                    <!-- <div class=" col-md-8"><label class="labels">Choose photo</label>
+                                <input type="file" name="image"   id="photoupload" accept=".jpg, .png, .jpeg" ></div>     -->
+                </div>
+            
+                </div>
+               
+               
+                
+                <!-- <div class="mt-5 text-center"><button class="btn btn-info profile-button" type="submit">Update
+                        Profile</button></div>
+                    </div> -->
+            </div>
+        </form>
+        </div>
+        </div>
+        <div class="col-md-4">
+            <div class="p-3 py-5">
+                <div class="d-flex justify-content-between align-items-center experience">
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+    
+ 
+  <!-- contact section -->
+
+ 
+  <!-- end contact section -->
+
+  <!-- footer section -->
+  <section class="container-fluid footer_section">
+    <p>
+      Copyright &copy; Codebook. All Rights Reserved By
+      <a href="https://manacinfotech.com">Codebook</a>
+    </p>
+  </section>
+  <!-- footer section -->
+
+  <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
+  <script type="text/javascript" src="js/bootstrap.js"></script>
+  <!-- progreesbar script -->
+
+  </script>
+  <script>
+    // This example adds a marker to indicate the position of Bondi Beach in Sydney,
+    // Australia.
+    function initMap() {
+      var map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 11,
+        center: {
+          lat: 40.645037,
+          lng: -73.880224
+        },
+      });
+
+      var image = 'images/maps-and-flags.png';
+      var beachMarker = new google.maps.Marker({
+        position: {
+          lat: 40.645037,
+          lng: -73.880224
+        },
+        map: map,
+        icon: image
+      });
+    }
+  </script>
+  <!-- google map js -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8eaHt9Dh5H57Zh0xVTqxVdBFCvFMqFjQ&callback=initMap">
+  </script>
+  <!-- end google map js -->
+</body>
+
+</html>

@@ -1,0 +1,1103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conductor Dashboard - School Bus Tracking Real-Time</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .nav-tabs {
+            display: flex;
+            gap: 0;
+            flex-wrap: wrap;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+
+        .nav-tab {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            background: #f5f5f5;
+            color: #333;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border-bottom: 3px solid transparent;
+            min-width: 140px;
+        }
+
+        .nav-tab:hover {
+            background: #e8e8e8;
+        }
+
+        .nav-tab.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-bottom: 3px solid #4caf50;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .status-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 15px;
+        }
+
+        .status-timeline {
+            list-style: none;
+            position: relative;
+            padding: 20px 0 20px 40px;
+        }
+
+        .status-timeline::before {
+            content: '';
+            position: absolute;
+            left: 10px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #ddd;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .timeline-item:last-child {
+            border-bottom: none;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -38px;
+            top: 0;
+            width: 20px;
+            height: 20px;
+            background: #667eea;
+            border: 3px solid white;
+            border-radius: 50%;
+            box-shadow: 0 0 0 2px #667eea;
+        }
+
+        .timeline-item.boarding::before {
+            background: #4caf50;
+            box-shadow: 0 0 0 2px #4caf50;
+        }
+
+        .timeline-item.dropping::before {
+            background: #ff9800;
+            box-shadow: 0 0 0 2px #ff9800;
+        }
+
+        .timeline-item-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .timeline-item-text {
+            flex: 1;
+        }
+
+        .timeline-item-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .timeline-item-time {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .timeline-item-badge {
+            background: #f0f0f0;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .timeline-item-badge.boarding {
+            background: #c8e6c9;
+            color: #2e7d32;
+        }
+
+        .timeline-item-badge.dropping {
+            background: #ffe0b2;
+            color: #e65100;
+        }
+
+        .real-time-counter {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .counter-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .counter-box.drop {
+            background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+            box-shadow: 0 4px 12px rgba(255, 152, 0, 0.3);
+        }
+
+        .counter-number {
+            font-size: 48px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .counter-label {
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.9;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+            gap: 20px;
+            padding: 20px;
+            flex-direction: column;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            overflow-y: auto; /* allow scrolling */
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            flex-shrink: 0;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-top: 12px;
+        }
+
+        .info-card {
+            background: rgba(255,255,255,0.1);
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .info-label {
+            font-size: 11px;
+            color: rgba(255,255,255,0.8);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .info-value {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 6px;
+        }
+
+        .map-container {
+            flex: 2;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+            min-height: 600px;
+            max-height: 70vh; /* let map shrink so bottom section appears */
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+
+        .bottom-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            flex: 0.8;
+            overflow-y: auto;
+        }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 15px;
+        }
+
+        .card h2 {
+            font-size: 16px;
+            margin-bottom: 10px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-list {
+            list-style: none;
+        }
+
+        .status-item {
+            padding: 8px;
+            border-left: 3px solid #667eea;
+            margin-bottom: 8px;
+            background: #f9f9f9;
+            border-radius: 3px;
+            font-size: 12px;
+        }
+
+        .status-item.warning {
+            border-left-color: #ff9800;
+            background: #fff3e0;
+        }
+
+        .status-item.success {
+            border-left-color: #4caf50;
+            background: #f1f8e9;
+        }
+
+        .status-item-text {
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 2px;
+        }
+
+        .status-item-time {
+            font-size: 10px;
+            color: #999;
+        }
+
+        .action-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .btn {
+            padding: 10px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #f5f5f5;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+
+        .btn-secondary:hover {
+            background: #eeeeee;
+        }
+
+        .btn-danger {
+            background: #f44336;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #d32f2f;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: slideIn 0.3s;
+        }
+
+        .alert-success {
+            background: #c8e6c9;
+            color: #2e7d32;
+            border-left: 4px solid #4caf50;
+        }
+
+        .alert-error {
+            background: #ffcdd2;
+            color: #c62828;
+            border-left: 4px solid #f44336;
+        }
+
+        .alert-warning {
+            background: #fff3cd;
+            color: #856404;
+            border-left: 4px solid #ff9800;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        .stat-box {
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: #999;
+            margin-top: 3px;
+            text-transform: uppercase;
+        }
+
+        .camera-input {
+            display: none;
+        }
+
+        .qr-preview {
+            width: 100%;
+            max-height: 150px;
+            margin-top: 10px;
+            border-radius: 4px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 8px;
+            max-width: 500px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        .modal-header {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .close-modal {
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #aaa;
+        }
+
+        .close-modal:hover {
+            color: #000;
+        }
+
+        @media (max-width: 1200px) {
+            .bottom-section {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .map-container {
+                flex: 2.5;
+            }
+        }
+
+        .live-badge {
+            display: inline-block;
+            background: #4caf50;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-size: 11px;
+            margin-left: 10px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.7;
+            }
+        }
+
+        .map-controls {
+            display: flex;
+            gap: 8px;
+            padding: 10px;
+            background: white;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 999;
+        }
+
+        .map-control-btn {
+            width: 40px;
+            height: 40px;
+            border: none;
+            border-radius: 4px;
+            background: #667eea;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .map-control-btn:hover {
+            background: #764ba2;
+            transform: scale(1.1);
+        }
+
+        @media (max-width: 1200px) {
+            .bottom-section {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .map-container {
+                flex: 2.5;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .header-info {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .map-container {
+                min-height: 300px;
+                border-radius: 20px;
+                font-size: 11px;
+            }
+
+            .map-controls {
+                flex-direction: column;
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.7;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="main-content">
+            <!-- Header -->
+            <div class="header">
+                <h1>
+                    <i class="fas fa-bus"></i>
+                    Conductor Dashboard
+                    <span class="live-badge"><i class="fas fa-circle"></i> LIVE</span>
+                </h1>
+                <div class="header-info">
+                    <div class="info-card">
+                        <div class="info-label">Bus Number</div>
+                        <div class="info-value" id="busNumber">-</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-label">Route</div>
+                        <div class="info-value" id="busRoute">-</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-label">Status</div>
+                        <div class="info-value" id="busStatus">-</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-label">Current Speed</div>
+                        <div class="info-value" id="busSpeed">0 km/h</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation Tabs -->
+            <div class="nav-tabs">
+                <button class="nav-tab active" onclick="showTab('tracking')" title="Live bus tracking with map">
+                    <i class="fas fa-map-location-dot"></i> School Bus Tracking
+                </button>
+                <button class="nav-tab" onclick="showTab('home')" title="Current bus status">
+                    <i class="fas fa-home"></i> Home (Current)
+                </button>
+                <button class="nav-tab" onclick="showTab('boarding')" title="Scan QR for boarding">
+                    <i class="fas fa-qrcode"></i> Home-School-Scan
+                </button>
+                <button class="nav-tab" onclick="showTab('boarding-status')" title="View boarding status">
+                    <i class="fas fa-list"></i> Boarding-Status
+                </button>
+                <button class="nav-tab" onclick="showTab('dropping')" title="Scan QR for dropping">
+                    <i class="fas fa-qrcode"></i> School-Home-Scan
+                </button>
+                <button class="nav-tab" onclick="showTab('drop-status')" title="View dropping status">
+                    <i class="fas fa-list"></i> Drop-Status
+                </button>
+            </div>
+
+            <!-- Tab: School Bus Tracking -->
+            <div id="tracking" class="tab-content active">
+                <div class="stat-box">
+                    <div class="stat-number" id="boardedCount">0</div>
+                    <div class="stat-label">Children Boarded</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number" id="droppedCount">0</div>
+                    <div class="stat-label">Children Dropped</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number" id="totalCapacity">45</div>
+                    <div class="stat-label">Bus Capacity</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number" id="availableSeats">45</div>
+                    <div class="stat-label">Available Seats</div>
+                </div>
+            </div>
+
+            <!-- Map -->
+            <div class="map-container">
+                <div id="map"></div>
+                <div class="map-controls">
+                    <button class="map-control-btn" onclick="zoomIn()" title="Zoom In">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                    <button class="map-control-btn" onclick="zoomOut()" title="Zoom Out">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                    <button class="map-control-btn" onclick="resetMapView()" title="Reset View">
+                        <i class="fas fa-home"></i>
+                    </button>
+                    <button class="map-control-btn" onclick="centerOnBus()" title="Center on Bus">
+                        <i class="fas fa-bus"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Bottom Section -->
+            <div class="bottom-section">
+                <!-- Recent Activity -->
+                <div class="card">
+                    <h2><i class="fas fa-clock"></i> Recent Activity</h2>
+                    <ul class="status-list" id="activityList">
+                        <li class="status-item">
+                            <div class="status-item-text">Loading activity...</div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="card">
+                    <h2><i class="fas fa-tasks"></i> Quick Actions</h2>
+                    <div class="action-buttons">
+                        <button class="btn btn-primary" onclick="openQRScanner('boarding')">
+                            <i class="fas fa-qrcode"></i> Board Child
+                        </button>
+                        <button class="btn btn-primary" onclick="openQRScanner('drop')">
+                            <i class="fas fa-qrcode"></i> Drop Child
+                        </button>
+                        <button class="btn btn-secondary" onclick="updateLocation()">
+                            <i class="fas fa-map-marker"></i> Update Location
+                        </button>
+                        <button class="btn btn-danger" onclick="endTrip()">
+                            <i class="fas fa-stop"></i> End Trip
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- QR Scanner Modal -->
+    <div id="qrModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeQRScanner()">&times;</span>
+            <div class="modal-header" id="qrModalTitle">Scan QR Code</div>
+            <form id="qrForm" method="POST" enctype="multipart/form-data">
+                <input type="hidden" id="actionType" name="action_type" value="">
+                <div class="alert alert-warning" style="margin-bottom: 20px;">
+                    <i class="fas fa-info-circle"></i>
+                    Point your camera at the QR code on the child's ID card
+                </div>
+                <input type="file" id="cameraInput" class="camera-input" accept="image/*" capture="environment">
+                <button type="button" class="btn btn-primary" onclick="triggerCamera()" style="width: 100%; margin-top: 20px;">
+                    <i class="fas fa-camera"></i> Capture QR Code
+                </button>
+                <div id="qrPreview"></div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    
+    <script>
+        // Global state
+        let map, busMarker, currentBusData = null;
+        let updateInterval = null;
+        let initialZoom = 10;
+        let initialLat = 20;
+        let initialLng = 78;
+        let boarded = [];
+        let dropped = [];
+
+        // Initialize map
+        function initializeMap() {
+            map = L.map('map').setView([initialLat, initialLng], initialZoom);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors',
+                maxZoom: 19,
+                minZoom: 3
+            }).addTo(map);
+        }
+
+        // Map control functions
+        function zoomIn() {
+            if (map) {
+                map.zoomIn();
+            }
+        }
+
+        function zoomOut() {
+            if (map) {
+                map.zoomOut();
+            }
+        }
+
+        function resetMapView() {
+            if (map) {
+                map.setView([initialLat, initialLng], initialZoom);
+            }
+        }
+
+        function centerOnBus() {
+            if (currentBusData && currentBusData.latest_location) {
+                const lat = currentBusData.latest_location.latitude;
+                const lng = currentBusData.latest_location.longitude;
+                map.setView([lat, lng], 15);
+            }
+        }
+
+        // Load bus status with real-time data
+        async function loadBusStatus() {
+            try {
+                const response = await fetch('/api/v1/tracking/buses/');
+                if (!response.ok) {
+                    throw new Error(`API responded with status: ${response.status}`);
+                }
+                const busesData = await response.json();
+                
+                // Get the first bus or specific bus assigned to conductor
+                let data = null;
+                if (Array.isArray(busesData)) {
+                    data = busesData[0];
+                } else if (busesData.results && Array.isArray(busesData.results)) {
+                    data = busesData.results[0];
+                } else {
+                    data = busesData;
+                }
+                
+                if (data) {
+                    currentBusData = data;
+                    updateHeader(data);
+                    updateMap(data);
+                    updateStats(data);
+                    loadBoardingDropStatus(data.bus_id);
+                } else {
+                    showAlert('No buses available', 'warning');
+                }
+            } catch (error) {
+                console.error('Error loading bus status:', error);
+                showAlert('Error loading bus status: ' + error.message, 'error');
+            }
+        }
+
+        // Load boarding and dropping status
+        async function loadBoardingDropStatus(busId) {
+            try {
+                const response = await fetch(`/api/v1/tracking/events/?bus=${busId}`);
+                if (!response.ok) throw new Error('Failed to load events');
+                
+                const eventsData = await response.json();
+                const events = Array.isArray(eventsData) ? eventsData : (eventsData.results || []);
+                
+                // Separate boarding and dropping events
+                boarded = events.filter(e => e.event_type === 'pickup');
+                dropped = events.filter(e => e.event_type === 'drop');
+                
+                // Update counts in real-time
+                document.getElementById('boardedCount').textContent = boarded.length;
+                document.getElementById('droppedCount').textContent = dropped.length;
+                
+                // Update activity feed
+                updateActivityFeed(events);
+            } catch (error) {
+                console.error('Error loading events:', error);
+            }
+        }
+
+        // Update activity feed with latest boarding/dropping
+        function updateActivityFeed(events) {
+            if (!events || events.length === 0) {
+                document.getElementById('activityList').innerHTML = '<li class="status-item"><div class="status-item-text">No activity yet</div></li>';
+                return;
+            }
+            
+            const sortedEvents = events.sort((a, b) => new Date(b.event_time) - new Date(a.event_time));
+            let html = '';
+            
+            sortedEvents.slice(0, 10).forEach(event => {
+                const time = new Date(event.event_time);
+                const formattedTime = time.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                const eventType = event.event_type === 'pickup' ? 'Boarded' : 'Dropped';
+                const className = event.event_type === 'pickup' ? 'success' : 'warning';
+                
+                html += `
+                    <li class="status-item ${className}">
+                        <div class="status-item-text">
+                            ${event.child_name || 'Child'} - ${eventType}
+                        </div>
+                        <div class="status-item-time">${formattedTime}</div>
+                    </li>
+                `;
+            });
+            
+            document.getElementById('activityList').innerHTML = html;
+        }
+
+        // Update header with bus info
+        function updateHeader(data) {
+            document.getElementById('busNumber').textContent = data.bus_number || '-';
+            document.getElementById('busRoute').textContent = data.bus_route || 'Route 1 - Home to School';
+            document.getElementById('busStatus').textContent = (data.bus_status || 'active').toUpperCase();
+            document.getElementById('busSpeed').textContent = (data.latest_location?.speed || 0) + ' km/h';
+        }
+
+        // Update map marker
+        function updateMap(data) {
+            if (data.latest_location) {
+                const lat = data.latest_location.latitude;
+                const lng = data.latest_location.longitude;
+                
+                if (!busMarker) {
+                    busMarker = L.marker([lat, lng], {
+                        icon: L.icon({
+                            iconUrl: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23667eea"><path d="M12 2c-4.4 0-8 2.6-8 5.8v9.3c0 2.3 1.7 4.3 4 4.8v1.1h2v-1h4v1h2v-1.1c2.3-.5 4-2.5 4-4.8V7.8c0-3.2-3.6-5.8-8-5.8zm0 2c3.3 0 6 1.8 6 4v2H6V8c0-2.2 2.7-4 6-4z"/></svg>',
+                            iconSize: [40, 40]
+                        })
+                    }).addTo(map);
+                } else {
+                    busMarker.setLatLng([lat, lng]);
+                }
+                
+                map.setView([lat, lng], 15);
+                busMarker.bindPopup(`Bus ${data.bus_number} - Speed: ${data.latest_location.speed} km/h`);
+            }
+        }
+
+        // Update statistics
+        function updateStats(data) {
+            const boarded = parseInt(document.getElementById('boardedCount').textContent) || 0;
+            const capacity = 45;
+            document.getElementById('availableSeats').textContent = capacity - boarded;
+        }
+
+        // QR Scanner functions
+        function openQRScanner(action) {
+            document.getElementById('qrModal').style.display = 'block';
+            document.getElementById('qrModalTitle').textContent = 
+                action === 'boarding' ? 'Scan QR Code - Board Child' : 'Scan QR Code - Drop Child';
+            document.getElementById('actionType').value = action;
+        }
+
+        function closeQRScanner() {
+            document.getElementById('qrModal').style.display = 'none';
+            document.getElementById('qrPreview').innerHTML = '';
+        }
+
+        function triggerCamera() {
+            document.getElementById('cameraInput').click();
+        }
+
+        document.getElementById('cameraInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const preview = document.getElementById('qrPreview');
+                const reader = new FileReader();
+                
+                reader.onload = function(event) {
+                    preview.innerHTML = `<img src="${event.target.result}" class="qr-preview">`;
+                };
+                
+                reader.readAsDataURL(file);
+                
+                // Auto-submit after 1 second
+                setTimeout(() => {
+                    processQRCode(file);
+                }, 1000);
+            }
+        });
+
+        async function processQRCode(file) {
+            const formData = new FormData();
+            formData.append('image', file);
+            
+            const actionType = document.getElementById('actionType').value;
+            const endpoint = actionType === 'boarding' ? '/conductor-home-school/' : '/conductor-school-home/';
+            
+            try {
+                const form = document.getElementById('qrForm');
+                form.action = endpoint;
+                form.method = 'POST';
+                
+                // Show processing message
+                showAlert('Processing QR code...', 'warning');
+                
+                // Submit form
+                form.submit();
+                
+                // Close modal after 1 second
+                setTimeout(() => {
+                    closeQRScanner();
+                    // Reload data after successful scan
+                    setTimeout(() => {
+                        loadBusStatus();
+                        showAlert(`${actionType === 'boarding' ? 'Child boarded' : 'Child dropped'} successfully!`, 'success');
+                    }, 500);
+                }, 1000);
+                
+            } catch (error) {
+                console.error('Error processing QR code:', error);
+                showAlert('Error processing QR code: ' + error.message, 'error');
+            }
+        }
+
+        // Update location
+        async function updateLocation() {
+            if (navigator.geolocation) {
+                showAlert('Getting your location...', 'warning');
+                navigator.geolocation.getCurrentPosition(async (position) => {
+                    const data = {
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude,
+                        speed: position.coords.speed || 0
+                    };
+                    
+                    try {
+                        const response = await fetch('/api/v1/tracking/location-update/', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRFToken': getCookie('csrftoken')
+                            },
+                            body: JSON.stringify(data)
+                        });
+                        
+                        if (response.ok) {
+                            showAlert('Location updated successfully', 'success');
+                            loadBusStatus();
+                        }
+                    } catch (error) {
+                        showAlert('Error updating location', 'error');
+                    }
+                });
+            }
+        }
+
+        // End trip
+        function endTrip() {
+            if (confirm('Are you sure you want to end this trip?')) {
+                showAlert('Trip ended', 'success');
+                // Implement trip end logic
+            }
+        }
+
+        // Show alert
+        function showAlert(message, type = 'info') {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i> ${message}`;
+            
+            const header = document.querySelector('.header');
+            header.insertAdjacentElement('afterend', alertDiv);
+            
+            setTimeout(() => alertDiv.remove(), 3000);
+        }
+
+        // Get CSRF token
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        // Close modal on outside click
+        window.onclick = function(event) {
+            const modal = document.getElementById('qrModal');
+            if (event.target === modal) {
+                closeQRScanner();
+            }
+        };
+
+        // Initialize on page load
+        window.addEventListener('load', function() {
+            initializeMap();
+            loadBusStatus();
+            
+            // Update bus status every 3 seconds for real-time tracking
+            updateInterval = setInterval(loadBusStatus, 3000);
+        });
+
+        // Cleanup
+        window.addEventListener('beforeunload', function() {
+            if (updateInterval) {
+                clearInterval(updateInterval);
+            }
+        });
+    </script>
+</body>
+</html>
